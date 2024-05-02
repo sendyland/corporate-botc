@@ -2,20 +2,19 @@
 
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Products</h2>
-            </div>
-            <div class="pull-right">
-                @can('product-create')
-                    <a class="btn btn-success" href="{{ route('products.create') }}"> Create New Product</a>
-                @endcan
-            </div>
-        </div>
-    </div>
+    <div class="pagetitle">
+        <h1>Products</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Product</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
 
-
+    @can('product-create')
+        <a class="btn btn-success" href="{{ route('products.create') }}"> Create Product</a>
+    @endcan
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
@@ -23,7 +22,7 @@
     @endif
 
 
-    <table class="table table-bordered">
+    <table class="table table-bordered mt-2">
         <tr>
             <th>No</th>
             <th>Name</th>
@@ -56,7 +55,4 @@
 
 
     {!! $products->links() !!}
-
-
-    <p class="text-center text-primary"><small>Tutorial by ItSolutionStuff.com</small></p>
 @endsection
