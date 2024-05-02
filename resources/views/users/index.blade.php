@@ -2,17 +2,21 @@
 
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Users Management</h2>
-            </div>
-            <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('users.create') }}"> Create New User</a>
-            </div>
-        </div>
-    </div>
+    <div class="pagetitle">
+        <h1>Users</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item">Users Management</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    <div class="pull-right">
+        @can('user-create')
+            <a class="btn btn-success" href="{{ route('users.create') }}"> Create User</a>
+        @endcan
 
+    </div>
 
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
@@ -21,7 +25,7 @@
     @endif
 
 
-    <table class="table table-bordered">
+    <table class="table table-bordered mt-2">
         <tr>
             <th>No</th>
             <th>Name</th>
@@ -37,12 +41,11 @@
                 <td>
                     @if (!empty($user->getRoleNames()))
                         @foreach ($user->getRoleNames() as $v)
-                            <label class="badge badge-success">{{ $v }}</label>
+                            {{ $v }}
                         @endforeach
                     @endif
                 </td>
                 <td>
-                    <a class="btn btn-info" href="{{ route('users.show', $user->id) }}">Show</a>
                     <a class="btn btn-primary" href="{{ route('users.edit', $user->id) }}">Edit</a>
                     {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id], 'style' => 'display:inline']) !!}
                     {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}

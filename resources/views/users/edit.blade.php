@@ -2,13 +2,16 @@
 
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Edit New User</h2>
-            </div>
-        </div>
-    </div>
+    <div class="pagetitle">
+        <h1>Products</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item">Product</li>
+                <li class="breadcrumb-item active">Edit Product</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
 
 
     @if (count($errors) > 0)
@@ -24,7 +27,7 @@
 
 
     {!! Form::model($user, ['method' => 'PATCH', 'route' => ['users.update', $user->id]]) !!}
-    <div class="row">
+    <div class="row hero">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Name:</strong>
