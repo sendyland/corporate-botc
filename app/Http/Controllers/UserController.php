@@ -48,7 +48,9 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
+            'namepic' => 'required',
             'email' => 'required|email|unique:users,email',
+            'phone' => 'required',
             'password' => 'required|same:confirm-password',
             'roles' => 'required'
         ]);
@@ -57,7 +59,7 @@ class UserController extends Controller
         $input['password'] = Hash::make($input['password']);
 
         $user = User::create($input);
-        $user->assignRole($request->input('roles'));
+        $user->assignRole(2);
 
         return redirect()->route('users.index')
             ->with('success', 'User created successfully');

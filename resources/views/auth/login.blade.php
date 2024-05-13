@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Login Page</title>
+    <title>Login Corporate</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -55,8 +55,8 @@
                                 <div class="card-body">
 
                                     <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Login</h5>
-                                        <p class="text-center small">Enter your Email & password to login</p>
+                                        <h5 class="card-title text-center pb-0 fs-4">Login Corporate</h5>
+                                        <p class="text-center small">Enter your Corporate Account</p>
                                     </div>
                                     <form class="row g-3 needs-validation" method="POST" action="{{ route('login') }}">
                                         @csrf

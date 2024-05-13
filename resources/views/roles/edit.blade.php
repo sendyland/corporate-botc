@@ -30,54 +30,13 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Permissions:</strong>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>List</th>
-                            <th>Create</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Role</td>
-                            <td>{{ Form::checkbox('permission[1][]', '1', in_array(1, $rolePermissions) ? true : false, ['class' => 'name']) }}
-                            </td>
-                            <td>{{ Form::checkbox('permission[1][]', '2', in_array(2, $rolePermissions) ? true : false, ['class' => 'name']) }}
-                            </td>
-                            <td>{{ Form::checkbox('permission[1][]', '3', in_array(3, $rolePermissions) ? true : false, ['class' => 'name']) }}
-                            </td>
-                            <td>{{ Form::checkbox('permission[1][]', '4', in_array(4, $rolePermissions) ? true : false, ['class' => 'name']) }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Product</td>
-                            <td>{{ Form::checkbox('permission[2][]', '5', in_array(5, $rolePermissions) ? true : false, ['class' => 'name']) }}
-                            </td>
-                            <td>{{ Form::checkbox('permission[2][]', '6', in_array(6, $rolePermissions) ? true : false, ['class' => 'name']) }}
-                            </td>
-                            <td>{{ Form::checkbox('permission[2][]', '7', in_array(7, $rolePermissions) ? true : false, ['class' => 'name']) }}
-                            </td>
-                            <td>{{ Form::checkbox('permission[2][]', '8', in_array(8, $rolePermissions) ? true : false, ['class' => 'name']) }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>User</td>
-                            <td>{{ Form::checkbox('permission[3][]', '9', in_array(9, $rolePermissions) ? true : false, ['class' => 'name']) }}
-                            </td>
-                            <td>{{ Form::checkbox('permission[3][]', '10', in_array(10, $rolePermissions) ? true : false, ['class' => 'name']) }}
-                            </td>
-                            <td>{{ Form::checkbox('permission[3][]', '11', in_array(11, $rolePermissions) ? true : false, ['class' => 'name']) }}
-                            </td>
-                            <td>{{ Form::checkbox('permission[3][]', '12', in_array(12, $rolePermissions) ? true : false, ['class' => 'name']) }}
-                            </td>
-                        </tr>
-                        <!-- Tambahkan baris tambahan untuk setiap izin -->
-                    </tbody>
-                </table>
+                <strong>Permission:</strong>
+                <br />
+                @foreach ($permission as $value)
+                    <label>{{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, ['class' => 'name']) }}
+                        {{ $value->name }}</label>
+                    <br />
+                @endforeach
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">

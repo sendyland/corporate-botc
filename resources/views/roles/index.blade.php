@@ -22,32 +22,38 @@
             <p>{{ $message }}</p>
         </div>
     @endif
+    <div class="col-12 mt-2">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">All Role</h5>
+                <table class="table table-bordered mt-2">
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th width="280px">Action</th>
+                    </tr>
+                    @foreach ($roles as $key => $role)
+                        <tr>
+                            <td>{{ ++$i }}</td>
+                            <td>{{ $role->name }}</td>
+                            <td>
+                                @can('role-edit')
+                                    <a class="btn btn-primary" href="{{ route('roles.edit', $role->id) }}">Edit</a>
+                                @endcan
+                                @can('role-delete')
+                                    {!! Form::open(['method' => 'DELETE', 'route' => ['roles.destroy', $role->id], 'style' => 'display:inline']) !!}
+                                    {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                                    {!! Form::close() !!}
+                                @endcan
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
 
-
-    <table class="table table-bordered mt-2">
-        <tr>
-            <th>No</th>
-            <th>Name</th>
-            <th width="280px">Action</th>
-        </tr>
-        @foreach ($roles as $key => $role)
-            <tr>
-                <td>{{ ++$i }}</td>
-                <td>{{ $role->name }}</td>
-                <td>
-                    @can('role-edit')
-                        <a class="btn btn-primary" href="{{ route('roles.edit', $role->id) }}">Edit</a>
-                    @endcan
-                    @can('role-delete')
-                        {!! Form::open(['method' => 'DELETE', 'route' => ['roles.destroy', $role->id], 'style' => 'display:inline']) !!}
-                        {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-                        {!! Form::close() !!}
-                    @endcan
-                </td>
-            </tr>
-        @endforeach
-    </table>
-
-
-    {!! $roles->render() !!}
+                <div class="pagination d-flex justify-content-between align-items-center">
+                    {!! $roles->links('vendor.pagination.bootstrap-5') !!}
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
