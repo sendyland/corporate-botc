@@ -14,8 +14,14 @@ return new class extends Migration
         Schema::create('employeds', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('tempat_lahir');
+            $table->date('tgl_lahir');
+            $table->string('jk');
+            $table->string('telp');
             $table->string('email')->unique();
             $table->string('position');
+            $table->string('status');
+            $table->string('status_woo');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
 

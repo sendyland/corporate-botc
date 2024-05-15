@@ -24,14 +24,24 @@ class EmployedController extends Controller
         $user = Auth::user();
         $role = $user->role; // Anda perlu mengganti 'role' dengan atribut yang benar dari model User yang menyimpan peran pengguna
 
-        if ($role === 'Admin') {
+        if ($role === 'Administrator') {
             $employeds = Employed::latest()->paginate(5);
         } else {
             $employeds = Employed::where('user_id', $user->id)->latest()->paginate(5);
         }
 
+         // Check if data is complete and add status
+         foreach ($employeds as $employed) {
+            $employed->status = $this->checkDataComplete($employed) ? 'Complete' : 'Lengkapi';
+        }
+
         return view('employeds.index', compact('employeds'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    private function checkDataComplete($employed)
+    {
+        return $employed->name && $employed->tempat_lahir && $employed->tgl_lahir && $employed->jk && $employed->telp && $employed->email && $employed->position;
     }
 
     public function create(): View
@@ -53,7 +63,13 @@ class EmployedController extends Controller
         // Selanjutnya, gunakan $company_id saat membuat Employed baru
         Employed::create([
             'name' => $request->name,
+            'tempat_lahir'=> $request->tempat_lahir,
+            'tgl_lahir' => $request->tgl_lahir,
+            'jk' => $request->jk,
+            'telp' => $request->telp,
             'email' => $request->email,
+            'status' => 0,
+            'status_woo' => 0,
             'position' => $request->position,
             'user_id' => $company_id,
         ]);
@@ -69,6 +85,13 @@ class EmployedController extends Controller
 
     public function edit(Employed $employed): View
     {
+        $user = Auth::user();
+        $role = $user->role;
+
+        if ($role !== 'Administrator' && $employed->user_id !== $user->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
         return view('employeds.edit', compact('employed'));
     }
 
@@ -78,7 +101,6 @@ class EmployedController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:employeds,email,'.$employed->id,
             'position' => 'required|string',
-            'company_id' => 'required|exists:users,id',
         ]);
 
         $employed->update($request->all());

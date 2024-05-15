@@ -3,27 +3,29 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
-
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
     use RegistersUsers;
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showRegistrationForm()
+    {
+        $courses = Course::all();
+        return view('auth.register', compact('courses'));
+    }
 
     /**
      * Where to redirect users after registration.
@@ -54,6 +56,10 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'program' => ['required', 'integer', 'exists:courses,id'],
+            'phone' => ['required', 'string', 'max:15'],
+            'namepic' => ['required', 'string', 'max:255'],
+            'peserta' => ['required', 'string', 'max:255'],
         ]);
     }
 
@@ -67,16 +73,37 @@ class RegisterController extends Controller
     {
         $user = User::create([
             'name' => $data['name'],
+            'namepic' => $data['namepic'],
             'email' => $data['email'],
+            'program' => $data['program'],
+            'phone' => $data['phone'],
+            'peserta' => $data['peserta'],
             'password' => Hash::make($data['password']),
         ]);
 
-        // Set peran "subscriber" untuk pengguna yang baru mendaftar
+        // Set peran "Corporate" untuk pengguna yang baru mendaftar
         $role = Role::where('name', 'Corporate')->first();
         if ($role) {
             $user->assignRole($role);
         }
 
         return $user;
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        $this->guard()->login($user);
+
+        return $this->registered($request, $user) ?: redirect($this->redirectPath());
     }
 }

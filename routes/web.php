@@ -27,7 +27,7 @@ use App\Http\Controllers\ProfileController;
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
-Route::post('course-registration', [CourseRegistrationController::class, 'store'])->name('course.registration');
+Route::post('course-registration', [CourseRegistrationController::class, 'createWithItem'])->name('course.registration');
 Route::post('module-permission', [ModulePermissionController::class, 'store'])->name('module.permission');
 Auth::routes();
 

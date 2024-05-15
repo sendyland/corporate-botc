@@ -116,17 +116,25 @@
                                         <div class="col-lg-6 col-md-12">
                                             <label for="yourProgram" class="form-label">Program yang ingin
                                                 Diambil</label>
-                                            <input id="email" type="email"
-                                                class="form-control @error('email') is-invalid @enderror" name="email"
-                                                value="{{ old('email') }}" required autocomplete="email"
-                                                placeholder="Email PIC">
+                                            <select id="program"
+                                                class="form-control @error('program') is-invalid @enderror"
+                                                name="program" required>
+                                                <option value="" disabled selected>Pilih Program</option>
+                                                @foreach ($courses as $course)
+                                                    <option value="{{ $course->id }}"
+                                                        {{ old('program') == $course->id ? 'selected' : '' }}>
+                                                        {{ $course->title }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
 
-                                            @error('email')
+                                            @error('program')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
                                         </div>
+
                                         <div class="col-lg-6 col-md-12">
                                             <label for="yourPhone" class="form-label">Nomor HP PIC</label>
                                             <input id="phone" type="number"

@@ -7,13 +7,13 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item">Users Management</li>
+                <li class="breadcrumb-item">Users Company Management</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
     <div class="pull-right">
         @can('user-create')
-            <a class="btn btn-success" href="{{ route('users.create') }}"> Create User</a>
+            <a class="btn btn-success" href="{{ route('users.create') }}"> Create User Company</a>
         @endcan
 
     </div>
@@ -26,7 +26,7 @@
     <div class="col-12 mt-2">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">All User</h5>
+                <h5 class="card-title">All User Company</h5>
                 <table class="table table-bordered mt-2">
                     <tr>
                         <th>No</th>
@@ -48,9 +48,9 @@
                                 @endif
                             </td>
                             <td>
-                                <a class="btn btn-primary" href="{{ route('users.edit', $user->id) }}">Edit</a>
+                                <a class="btn btn-primary btn-sm" href="{{ route('users.edit', $user->id) }}">Edit</a>
                                 {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id], 'style' => 'display:inline']) !!}
-                                {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                                {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}
                                 {!! Form::close() !!}
                             </td>
                         </tr>

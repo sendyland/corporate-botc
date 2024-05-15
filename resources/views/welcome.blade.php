@@ -69,7 +69,11 @@
                 <i class="bi bi-list mobile-nav-toggle d-none"></i>
             </nav><!-- .navbar -->
 
-            <a class="btn-getstarted scrollto" href="{{ route('register') }}">Register Now</a>
+            <div>
+                <a class="btn-getstarted scrollto" href="{{ route('login') }}">Login</a>
+                <a class="btn-getstarted scrollto" href="{{ route('register') }}">Register Now</a>
+            </div>
+
 
         </div>
     </header><!-- End Header -->

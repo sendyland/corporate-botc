@@ -33,9 +33,10 @@
             </a>
         </li>
         <li class="nav-item ">
-            <a class="nav-link collapsed" href="{{ route('products.index') }}">
+            <a class="nav-link  {{ request()->routeIs('course-order.index') ? '' : 'collapsed' }}"
+                href="{{ route('course-order.index') }}">
                 <i class="bi bi-newspaper"></i>
-                <span>Order History</span>
+                <span>Order Course</span>
             </a>
         </li>
         <li class="nav-item ">

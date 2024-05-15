@@ -44,7 +44,7 @@
                     @foreach ($courses as $course)
                         <div class="col-xxl-3 col-md-6">
                             <div class="card">
-                                <img src="assets/img/card.jpg" class="card-img-top" alt="...">
+                                <img src="assets/img/card-course.jpg" class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title product">{{ $course->title }}</h5>
                                     <p class="card-text">Rp{{ number_format($course->price, 0, ',', '.') }}

@@ -22,35 +22,41 @@
             </ul>
         </div>
     @endif
+    <div class="col-12 mt-2">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">All Courses</h5>
+                <form action="{{ route('courses.update', $course->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
 
-    <form action="{{ route('courses.update', $course->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Title:</strong>
-                    <input type="text" name="title" value="{{ $course->title }}" class="form-control"
-                        placeholder="Title">
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Price:</strong>
-                    <input type="text" name="price" value="{{ $course->price }}" class="form-control"
-                        placeholder="Price">
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Description:</strong>
-                    <textarea class="form-control" style="height:150px" name="description" placeholder="Description">{{ $course->description }}</textarea>
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Title:</strong>
+                                <input type="text" name="title" value="{{ $course->title }}" class="form-control"
+                                    placeholder="Title">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Price:</strong>
+                                <input type="text" name="price" value="{{ $course->price }}" class="form-control"
+                                    placeholder="Price">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Description:</strong>
+                                <textarea class="form-control" style="height:150px" name="description" placeholder="Description">{{ $course->description }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
 @endsection

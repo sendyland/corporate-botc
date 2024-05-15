@@ -28,32 +28,54 @@
                 <table class="table table-bordered mt-2">
                     <tr>
                         <th>No</th>
-                        <th>Name</th>
+                        <th>Nama Lengkap</th>
+                        <th>TTL</th>
+                        <th>Jenis Kelamin</th>
+                        <th>Telp</th>
                         <th>Email</th>
                         <th>Position</th>
-                        {{-- <th>Company</th> --}}
-                        <th width="280px">Action</th>
+                        <th>Persyaratan</th>
+                        <th>Enroll Course</th>
+                        @canany(['employed-edit', 'employed-delete'])
+                            <th width="280px">Action</th>
+                        @endcanany
+
                     </tr>
                     @foreach ($employeds as $employed)
                         <tr>
                             <td>{{ ++$i }}</td>
                             <td>{{ $employed->name }}</td>
+                            <td>{{ $employed->tempat_lahir . ',' }} {{ $employed->tgl_lahir }}</td>
+                            <td>
+                                @if ($employed->jk == 1)
+                                    Laki-Laki
+                                @else
+                                    Perempuan
+                                @endif
+                            </td>
+                            <td>{{ $employed->telp }}</td>
                             <td>{{ $employed->email }}</td>
                             <td>{{ $employed->position }}</td>
-                            {{-- <td>{{ $employed->user->name }}</td> --}}
-                            <td>
-                                <form action="{{ route('employeds.destroy', $employed->id) }}" method="POST">
-                                    @can('employed-edit')
-                                        <a class="btn btn-primary" href="{{ route('employeds.edit', $employed->id) }}">Edit</a>
-                                    @endcan
+                            <td>{{ $employed->status }}</td>
+                            <td></td>
+                            @canany(['employed-edit', 'employed-delete'])
+                                <td>
+                                    <form action="{{ route('employeds.destroy', $employed->id) }}" method="POST">
+                                        @can('employed-edit')
+                                            @if ($employed->status == 'Lengkapi')
+                                                <a class="btn btn-primary btn-sm"
+                                                    href="{{ route('employeds.edit', $employed->id) }}">Edit</a>
+                                            @endif
+                                        @endcan
 
-                                    @csrf
-                                    @method('DELETE')
-                                    @can('employed-delete')
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    @endcan
-                                </form>
-                            </td>
+                                        @csrf
+                                        @method('DELETE')
+                                        @can('employed-delete')
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        @endcan
+                                    </form>
+                                </td>
+                            @endcanany
                         </tr>
                     @endforeach
                 </table>

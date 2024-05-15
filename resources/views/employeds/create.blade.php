@@ -27,11 +27,41 @@
         <form action="{{ route('employeds.store') }}" method="POST">
             @csrf
 
-            <div class="row">
+            <div class="row g-2">
+                <h5>Pendaftaran Peserta</h5>
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <strong>Name:</strong>
-                        <input type="text" name="name" class="form-control" placeholder="Name">
+                        <strong>Nama Lengkap:</strong>
+                        <input type="text" name="name" class="form-control" required placeholder="Name">
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>Tempat Lahir:</strong>
+                        <input type="text" name="tempat_lahir" class="form-control" required
+                            placeholder="Kota Kelahiran">
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>Tanggal Lahir:</strong>
+                        <input type="date" name="tgl_lahir" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>Jenis Kelamin:</strong>
+                        <select class="form-control" name="jk">
+                            <option>Jenis Kelamin</option>
+                            <option value="1">Laki-Laki</option>
+                            <option value="2">Perempuan</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>No Telp:</strong>
+                        <input type="text" name="telp" class="form-control" placeholder="No Telp">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
@@ -47,7 +77,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
-                    <button type="submit" class="btn btn-primary">Add Peserta</button>
+                    <button type="submit" class="btn btn-primary">Tambah Peserta</button>
                 </div>
             </div>
         </form>
