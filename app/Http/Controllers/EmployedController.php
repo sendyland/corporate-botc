@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employed;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -21,20 +22,20 @@ class EmployedController extends Controller
 
     public function index(): View
     {
-        $user = Auth::user();
-        $role = $user->role; // Anda perlu mengganti 'role' dengan atribut yang benar dari model User yang menyimpan peran pengguna
+        $id = Auth::user()->id;
+        $user = User::find($id);
+        $userRoles = $user->getRoleNames();
 
-        if ($role === 'Administrator') {
+        if ($userRoles->contains('Administrator')) {
             $employeds = Employed::latest()->paginate(5);
         } else {
             $employeds = Employed::where('user_id', $user->id)->latest()->paginate(5);
         }
 
-         // Check if data is complete and add status
-         foreach ($employeds as $employed) {
+        foreach ($employeds as $employed) {
             $employed->status = $this->checkDataComplete($employed) ? 'Complete' : 'Lengkapi';
+            $employed->company = User::where('id', $employed->user_id)->first();
         }
-
         return view('employeds.index', compact('employeds'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -59,8 +60,6 @@ class EmployedController extends Controller
         ]);
 
         $company_id = Auth::user()->id;
-
-        // Selanjutnya, gunakan $company_id saat membuat Employed baru
         Employed::create([
             'name' => $request->name,
             'tempat_lahir'=> $request->tempat_lahir,

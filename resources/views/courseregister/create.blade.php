@@ -51,7 +51,7 @@
                                             <th>Program Course</th>
                                             <th>Harga</th>
                                             <th>
-                                                <a href="#" class="btn btn-primary" id="add-row"><i
+                                                <a href="#" class="btn btn-primary btn-sm" id="add-row"><i
                                                         class="bi bi-plus"></i></a>
                                             </th>
                                         </tr>

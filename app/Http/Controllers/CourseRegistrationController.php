@@ -17,21 +17,21 @@ class CourseRegistrationController extends Controller
 
     public function index(): View
     {
-        $user = Auth::user();
-        $role = $user->role; // Anda perlu mengganti 'role' dengan atribut yang benar dari model User yang menyimpan peran pengguna
+        $id = Auth::user()->id;
+        $user = User::find($id);
+        $userRoles = $user->getRoleNames();
 
-        if ($role === 'Admin') {
+         if ($userRoles->contains('Administrator')) {
             $courseregister = CourseRegistration::latest()->paginate(5);
         } else {
             $courseregister = CourseRegistration::where('user_id', $user->id)->latest()->paginate(5);
         }
 
         foreach ($courseregister as $order) {
-
             $order->items = CourseRegistrationItem::where('order_id', $order->id)->latest()->get();
 
             $order->participantCount = CourseRegistrationItem::where('order_id', $order->id)->count();
-            $order->totalPrice = CourseRegistrationItem::where('order_id', $order->id)->sum('price');
+            $order->totalPrice = formatRupiah(CourseRegistrationItem::where('order_id', $order->id)->sum('price'));
             $order->company = User::where('id', $order->user_id)->first();
         }
 
@@ -39,8 +39,14 @@ class CourseRegistrationController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
-        public function create(): View
-        {
+    public function show(CourseRegistration $courseregistration): View
+    {
+        $orderitem = CourseRegistrationItem::where('order_id', $courseregistration->id)->get();
+        return view('courseregister.show', compact('courseregistration'));
+    }
+
+    public function create(): View
+    {
             $user = Auth::user();
             $role = $user->role;
             $allcourses = Course::all();

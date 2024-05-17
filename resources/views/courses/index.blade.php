@@ -55,7 +55,7 @@
                                 </div>
                                 <form action="{{ route('courses.destroy', $course->id) }}" method="POST">
                                     @can('course-edit')
-                                        <a class="btn btn-primary btn-sm" href="{{ route('courses.edit', $course->id) }}"><i
+                                        <a class="btn btn-warning btn-sm" href="{{ route('courses.edit', $course->id) }}"><i
                                                 class="bi bi-pencil-square"></i></a>
                                     @endcan
 

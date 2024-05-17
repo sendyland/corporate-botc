@@ -20,7 +20,8 @@
 
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
-                        <h6>{{ auth()->user()->namepic }}</h6>
+                        <h6>{{ auth()->user()->namepic }} </h6>
+
                     </li>
 
                     <li>

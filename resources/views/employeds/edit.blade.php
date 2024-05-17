@@ -69,8 +69,9 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <strong>Email:</strong>
-                        <input type="email" name="email" class="form-control" placeholder="Email"
+                        <strong>Email:</strong> <span class="badge bg-warning text-dark">Perubahan Email Bisa Kontak
+                            langsung Admin</span>
+                        <input disabled type="email" name="email" class="form-control" placeholder="Email"
                             value="{{ $employed->email }}">
                     </div>
                 </div>

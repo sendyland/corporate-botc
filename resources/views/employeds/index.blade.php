@@ -28,6 +28,9 @@
                 <table class="table table-bordered mt-2">
                     <tr>
                         <th>No</th>
+                        @can('employed-delete')
+                            <th>Asal Company</th>
+                        @endcan
                         <th>Nama Lengkap</th>
                         <th>TTL</th>
                         <th>Jenis Kelamin</th>
@@ -35,15 +38,19 @@
                         <th>Email</th>
                         <th>Position</th>
                         <th>Persyaratan</th>
+                        <th>Learning Status</th>
                         <th>Enroll Course</th>
                         @canany(['employed-edit', 'employed-delete'])
-                            <th width="280px">Action</th>
+                            <th width="160px">Action</th>
                         @endcanany
 
                     </tr>
                     @foreach ($employeds as $employed)
                         <tr>
                             <td>{{ ++$i }}</td>
+                            @can('employed-delete')
+                                <td>{{ $employed->company->name }}</td>
+                            @endcan
                             <td>{{ $employed->name }}</td>
                             <td>{{ $employed->tempat_lahir . ',' }} {{ $employed->tgl_lahir }}</td>
                             <td>
@@ -58,20 +65,59 @@
                             <td>{{ $employed->position }}</td>
                             <td>{{ $employed->status }}</td>
                             <td></td>
-                            @canany(['employed-edit', 'employed-delete'])
+                            <td></td>
+                            @canany(['employed-view', 'employed-edit', 'employed-delete'])
                                 <td>
                                     <form action="{{ route('employeds.destroy', $employed->id) }}" method="POST">
+                                        <a href="#" order="{{ $employed->id }}" class="print btn btn-primary btn-sm"
+                                            data-bs-toggle="modal" data-bs-target="#ExtralargeModal{{ $employed->id }}">
+                                            <i class="bi bi-printer"></i>
+                                        </a>
+                                        <div class="modal fade" id="ExtralargeModal{{ $employed->id }}" tabindex="-1"
+                                            style="display: none;" aria-hidden="true">
+                                            <div class="modal-dialog modal-l">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Detail Company {{ $employed->company->name }}
+                                                        </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body" id="loadorder">
+                                                        <table class="table table-bordered">
+                                                            <tr>
+                                                                <td>Nama Perusahaan</td>
+                                                                <td> {{ $employed->company->name }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Nama Lengkap</td>
+                                                                <td>{{ $employed->name }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Tempat Lahir :</td>
+                                                                <td>{{ $employed->tempat_lahir }}</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-primary">OK</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         @can('employed-edit')
-                                            @if ($employed->status == 'Lengkapi')
-                                                <a class="btn btn-primary btn-sm"
-                                                    href="{{ route('employeds.edit', $employed->id) }}">Edit</a>
-                                            @endif
+                                            <a class="btn btn-warning btn-sm"
+                                                href="{{ route('employeds.edit', $employed->id) }}"><i
+                                                    class="bi bi-pencil"></i></a>
                                         @endcan
 
                                         @csrf
                                         @method('DELETE')
                                         @can('employed-delete')
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            <button type="submit" class="btn btn-danger btn-sm"><i
+                                                    class="bi bi-trash"></i></button>
                                         @endcan
                                     </form>
                                 </td>

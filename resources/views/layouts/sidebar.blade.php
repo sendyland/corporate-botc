@@ -1,16 +1,16 @@
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
-        @can('dashboard-admin')
+        @canany(['dashboard-admin', 'dashboard-corporate'])
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('home') ? '' : 'collapsed' }}" href="{{ route('home') }}">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
-        @endcan
+        @endcanany
 
-
+        <li class="nav-heading">Feature</li>
         <li class="nav-item ">
             <a class="nav-link {{ request()->routeIs('profile.index') ? '' : 'collapsed' }}"
                 href="{{ route('profile.index') }}">
@@ -40,7 +40,7 @@
             </a>
         </li>
         <li class="nav-item ">
-            <a class="nav-link collapsed" href="{{ route('products.index') }}">
+            <a class="nav-link collapsed" href="#">
                 <i class="bi bi-credit-card"></i>
                 <span>Invoice</span>
             </a>
@@ -55,6 +55,12 @@
             <a class="nav-link collapsed" target="_blank" href="https://info.blueocean-tc.com/">
                 <i class="bi bi-card-checklist"></i>
                 <span>Validasi Peserta</span>
+            </a>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link collapsed" target="_blank" href="https://wa.me/">
+                <i class="bi bi-send-exclamation"></i>
+                <span>Customer Service</span>
             </a>
         </li>
         {{-- <li class="nav-item">

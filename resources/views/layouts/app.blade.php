@@ -43,6 +43,8 @@
         @yield('content')
     </main>
 
+    @yield('modals')
+
     <!-- ======= Footer ======= -->
     @include('layouts.footer')
     <!-- End Footer -->
@@ -63,7 +65,7 @@
     <!-- Template Main JS File -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
-    @yield('script')
+    @stack('myscript')
 </body>
 
 </html>
