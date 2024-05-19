@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('price');
             $table->text('description')->nullable();
+            $table->string('woo_id')->nullable();
+            $table->timestamp('woo_date')->nullable();
             $table->timestamps();
         });
     }

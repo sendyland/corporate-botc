@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('position');
             $table->string('status');
             $table->string('status_woo');
+            $table->string('role_woo');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
 

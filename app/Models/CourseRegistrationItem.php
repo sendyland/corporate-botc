@@ -16,4 +16,9 @@ class CourseRegistrationItem extends Model
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function courseRegistration()
+    {
+        return $this->belongsTo(CourseRegistration::class, 'order_id');
+    }
 }

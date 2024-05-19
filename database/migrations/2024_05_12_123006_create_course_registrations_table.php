@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('order_number')->unique();
             $table->string('participants');
+            $table->string('noted');
+            $table->string('status');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
 

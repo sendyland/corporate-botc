@@ -193,9 +193,8 @@
                                                     <div class="modal-body" id="loadorder">
                                                         <div class="col-md-12">
                                                             <div class="row">
-
                                                                 <div
-                                                                    class="receipt-main col-xs-12 col-sm-12 col-md-12 col-xs-offset-1 col-sm-offset-1 col-md-offset-3">
+                                                                    class="receipt-main receipt-main-{{ $order->id }} col-xs-12 col-sm-12 col-md-12 col-xs-offset-1 col-sm-offset-1 col-md-offset-3">
                                                                     <div class="row">
                                                                         <div class="col-6">
                                                                             <div class="receipt-header">
@@ -215,18 +214,19 @@
                                                                                         <p>Telp :
                                                                                             {{ $order->company->telp }} <i
                                                                                                 class="fa fa-phone"></i></p>
-                                                                                        <p>Email
-                                                                                            : {{ $order->company->email }}
-                                                                                            <i class="fa fa-envelope-o"></i>
+                                                                                        <p>Email :
+                                                                                            {{ $order->company->email }} <i
+                                                                                                class="fa fa-envelope-o"></i>
                                                                                         </p>
-                                                                                        <p>Alamat : <i
+                                                                                        <p>Alamat :
+                                                                                            {{ $order->company->address }}
+                                                                                            <i
                                                                                                 class="fa fa-location-arrow"></i>
                                                                                         </p>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-
                                                                         <div class="col-6">
                                                                             <div class="receipt-header">
                                                                                 <div
@@ -235,17 +235,11 @@
                                                                                         <h5>PIC :
                                                                                             {{ $order->company->namepic }}
                                                                                         </h5>
-                                                                                        <p><b>Mobile :</b> +1 12345-4569</p>
-                                                                                        <p><b>Email :</b> customer@gmail.com
-                                                                                        </p>
-                                                                                        <p><b>Address :</b> New York, USA
-                                                                                        </p>
                                                                                         <p><b>INVOICE :
                                                                                                 {{ $order->order_number }}</b>
                                                                                         </p>
                                                                                     </div>
                                                                                 </div>
-
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -260,88 +254,83 @@
                                                                         <tbody>
                                                                             @foreach ($order->items as $item)
                                                                                 <tr>
-                                                                                    <td class="col-md-9">
-                                                                                        {{ $item->id }}
+                                                                                    <td>{{ $item->employed->name }}</td>
+                                                                                    <td>{{ $item->course->title }}</td>
+                                                                                    <td>{{ formatRupiah($item->price) }}
                                                                                     </td>
-                                                                                    <td class="col-md-3"><i
-                                                                                            class="fa fa-inr"></i>
-                                                                                        15,000/-</td>
                                                                                 </tr>
                                                                             @endforeach
-
-
                                                                             <tr>
+                                                                                <td></td>
                                                                                 <td class="text-right">
-                                                                                    <p>
-                                                                                        <strong>Total Amount: </strong>
-                                                                                    </p>
-                                                                                    <p>
-                                                                                        <strong>Late Fees: </strong>
-                                                                                    </p>
-                                                                                    <p>
-                                                                                        <strong>Payable Amount: </strong>
-                                                                                    </p>
-                                                                                    <p>
-                                                                                        <strong>Balance Due: </strong>
-                                                                                    </p>
+                                                                                    <p><strong>Sub Amount: </strong></p>
+                                                                                    <p><strong>Fees: </strong></p>
+
                                                                                 </td>
                                                                                 <td>
-                                                                                    <p>
-                                                                                        <strong><i class="fa fa-inr"></i>
-                                                                                            65,500/-</strong>
+                                                                                    <p><strong>{{ formatRupiah($order->items->sum('price')) }}</strong>
                                                                                     </p>
-                                                                                    <p>
-                                                                                        <strong><i class="fa fa-inr"></i>
-                                                                                            500/-</strong>
-                                                                                    </p>
-                                                                                    <p>
-                                                                                        <strong><i class="fa fa-inr"></i>
-                                                                                            1300/-</strong>
-                                                                                    </p>
-                                                                                    <p>
-                                                                                        <strong><i class="fa fa-inr"></i>
-                                                                                            9500/-</strong>
+                                                                                    <p><strong>-</strong>
                                                                                     </p>
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
-
+                                                                                <td></td>
                                                                                 <td class="text-right">
                                                                                     <h2><strong>Total: </strong></h2>
                                                                                 </td>
                                                                                 <td class="text-left text-danger">
-                                                                                    <h2><strong><i class="fa fa-inr"></i>
-                                                                                            31.566/-</strong></h2>
+                                                                                    <h2><strong>{{ formatRupiah($order->items->sum('price')) }}</strong>
+                                                                                    </h2>
                                                                                 </td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
-
-
                                                                     <div class="row">
                                                                         <div
                                                                             class="receipt-header receipt-header-mid receipt-footer">
                                                                             <div
                                                                                 class="col-xs-8 col-sm-8 col-md-8 text-left">
                                                                                 <div class="receipt-right">
-                                                                                    <p><b>Date :</b> 15 Aug 2016</p>
-                                                                                    <h5 style="color: rgb(140, 140, 140);">
-                                                                                        Status Payment : </h5>
+                                                                                    <p><b>Date :</b>
+                                                                                        {{ $order->created_at }}</p>
+
+                                                                                    <h5>
+
+                                                                                        Status Register : @if ($order->status == 0)
+                                                                                            <span
+                                                                                                class="badge bg-warning">Register
+                                                                                                Pending</span>
+                                                                                        @else
+                                                                                            <span
+                                                                                                class="badge bg-info">Register
+                                                                                                Approve</span>
+                                                                                        @endif
+                                                                                    </h5>
+                                                                                    <h5>
+                                                                                        Status Payment : @if ($order->status == 3)
+                                                                                            <span
+                                                                                                class="badge bg-info text-light">Paid</span>
+                                                                                        @else
+                                                                                            <span
+                                                                                                class="badge bg-warning">Not
+                                                                                                Paid</span>
+                                                                                        @endif
+                                                                                    </h5>
                                                                                 </div>
                                                                             </div>
-
                                                                         </div>
                                                                     </div>
-
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
                                                             data-bs-dismiss="modal">Close</button>
-                                                        <button type="button" class="btn btn-primary">Print</button>
+                                                        <a href="/course-order/{{ $order->id }}/print" target="__blank"
+                                                            class="btn btn-primary"
+                                                            onclick="printReceipt({{ $order->id }})">Print</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -350,21 +339,20 @@
                                             @can('employed-edit')
                                                 <a class="btn btn-warning btn-sm" href="#"><i class="bi bi-pencil"></i></a>
                                             @endcan
-
                                             @csrf
                                             @method('DELETE')
                                             @can('employed-delete')
                                                 <button type="submit" class="btn btn-danger btn-sm"><i
                                                         class="bi bi-trash"></i></button>
                                             @endcan
-                                        </form>
-                                    @endcanany
+                                        @endcanany
+                                    </form>
                                 </td>
-
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>

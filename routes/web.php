@@ -42,4 +42,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('employeds', EmployedController::class);
     Route::resource('courses', CourseController::class);
     Route::resource('course-order', CourseRegistrationController::class);
+    Route::get('course-order/{id}/print', [CourseRegistrationController::class, 'print'])->name('course-order.print');
 });

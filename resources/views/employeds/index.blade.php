@@ -38,7 +38,7 @@
                         <th>Email</th>
                         <th>Position</th>
                         <th>Persyaratan</th>
-                        <th>Learning Status</th>
+                        <th>Register Learning</th>
                         <th>Enroll Course</th>
                         @canany(['employed-edit', 'employed-delete'])
                             <th width="160px">Action</th>
@@ -64,7 +64,13 @@
                             <td>{{ $employed->email }}</td>
                             <td>{{ $employed->position }}</td>
                             <td>{{ $employed->status }}</td>
-                            <td></td>
+                            <td>
+                                @if ($employed->status_woo == 0)
+                                    <span class="badge bg-warning">Belum Register</span>
+                                @else
+                                    <span class="badge bg-info">Sudah Register</span>
+                                @endif
+                            </td>
                             <td></td>
                             @canany(['employed-view', 'employed-edit', 'employed-delete'])
                                 <td>

@@ -12,8 +12,15 @@ class CourseRegistration extends Model
     protected $fillable = [
         'user_id',
         'participants',
-        'order_number'
+        'order_number',
+        'noted',
+        'status'
     ];
+
+    public function items()
+    {
+        return $this->hasMany(CourseRegistrationItem::class, 'order_id');
+    }
 
     public function user()
     {

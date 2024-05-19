@@ -130,7 +130,7 @@
                             <!--begin::Notes-->
                             <div class="mb-0">
                                 <label class="form-label fs-6 fw-bold text-gray-700">Notes</label>
-                                <textarea name="notes" class="form-control form-control-solid" rows="3"
+                                <textarea name="noted" class="form-control form-control-solid" rows="3"
                                     placeholder="Berikan Note Untuk Admin jika ada"></textarea>
                             </div>
                             <div class="mt-2">
@@ -150,44 +150,53 @@
     </div>
 @endsection
 
-{{-- @section('scripts')
+@section('myscript')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
-            let rowNumber = 1;
+            let rowCount = $('#item-table tr').length;
 
-            $('#add-row').on('click', function(e) {
+            $('#add-row').click(function(e) {
                 e.preventDefault();
-                rowNumber++;
-                let newRow = $('#item-table tr').first().clone();
-                newRow.find('.item-number').text(rowNumber);
-                newRow.find('.name-select').attr('name', 'name[]').val('');
-                newRow.find('.program-select').attr('name', 'program[]').val('');
-                newRow.find('.price-program').text('-');
-                newRow.find('.program-select').on('change', updatePrice);
-                newRow.find('.remove-row').on('click', removeRow);
+                rowCount++;
+                let newRow = `<tr class="border-bottom border-bottom-dashed">
+                    <td class="item-number">${rowCount}</td>
+                    <td class="pe-7">
+                        <select class="form-control name-select" name="name[]" required>
+                            <option value="" disabled selected>Pilih Nama Peserta</option>
+                            @foreach ($employeds as $employed)
+                                <option value="{{ $employed->id }}">{{ $employed->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control program-select" name="program[]" required>
+                            <option value="" disabled selected>Pilih Program</option>
+                            @foreach ($allcourses as $course)
+                                <option value="{{ $course->id }}" data-price="{{ $course->price }}">
+                                    {{ $course->title }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td><span class="price-program"><input class="form-control" name="price[]" value="0" type="text" readonly></span></td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-icon btn-danger remove-row">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
                 $('#item-table').append(newRow);
+                updateRowNumbers();
+                updateTotals();
             });
 
-            $('.program-select').on('change', updatePrice);
-
-            $('.remove-row').on('click', removeRow);
-
-            function updatePrice() {
-                let priceElement = $(this).closest('tr').find('.price-program');
-                let selectedOption = $(this).find('option:selected');
-                let price = selectedOption.data('price');
-                priceElement.text(price ? `Rp ${parseFloat(price).toFixed(2)}` : '-');
+            $(document).on('click', '.remove-row', function() {
+                $(this).closest('tr').remove();
+                rowCount--;
+                updateRowNumbers();
                 updateTotals();
-            }
-
-            function removeRow() {
-                if ($('#item-table tr').length > 1) {
-                    $(this).closest('tr').remove();
-                    updateRowNumbers();
-                    updateTotals();
-                }
-            }
+            });
 
             function updateRowNumbers() {
                 $('#item-table tr').each(function(index) {
@@ -195,16 +204,24 @@
                 });
             }
 
+            $(document).on('change', '.program-select', function() {
+                let price = $(this).find('option:selected').data('price');
+                $(this).closest('tr').find('input[name="price[]"]').val(price);
+                updateTotals();
+            });
+
             function updateTotals() {
-                let total = 0;
-                $('.price-program').each(function() {
-                    let priceText = $(this).text().replace('Rp ', '').replace(',', '');
-                    let price = parseFloat(priceText) || 0;
-                    total += price;
+                let subtotal = 0;
+                $('#item-table input[name="price[]"]').each(function() {
+                    subtotal += parseFloat($(this).val());
                 });
-                $('#sub-total').text(`Rp ${total.toFixed(2)}`);
-                $('#grand-total').text(`Rp ${total.toFixed(2)}`);
+                $('#sub-total').text(subtotal.toFixed(2));
+                $('#grand-total').text(subtotal.toFixed(2));
             }
+
+            // Panggil fungsi updateTotals() setelah baris ditambahkan atau dihapus
+            $('#item-table').on('change', 'input[name="price[]"]', updateTotals);
+            $('#item-table').on('DOMNodeInserted DOMNodeRemoved', updateTotals);
         });
     </script>
-@endsection --}}
+@endsection

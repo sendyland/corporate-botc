@@ -84,14 +84,21 @@ class EmployedController extends Controller
 
     public function edit(Employed $employed): View
     {
-        $user = Auth::user();
-        $role = $user->role;
+        $id = Auth::user()->id;
+        $user = User::find($id);
+        $userRoles = $user->getRoleNames();
 
-        if ($role !== 'Administrator' && $employed->user_id !== $user->id) {
+        if ($userRoles !== 'Administrator' && $employed->user_id !== $user->id) {
             abort(403, 'Unauthorized action.');
         }
 
-        return view('employeds.edit', compact('employed'));
+        if ($userRoles->contains('Administrator')) {
+            $disable = '';
+        } else {
+            $disable = 'disabled';
+        }
+
+        return view('employeds.edit', compact('employed', 'disable'));
     }
 
     public function update(Request $request, Employed $employed): RedirectResponse

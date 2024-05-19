@@ -7,6 +7,7 @@ use App\Models\CourseRegistration;
 use App\Models\CourseRegistrationItem;
 use App\Models\Employed;
 use App\Models\User;
+use App\Services\WooCommerceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -14,7 +15,6 @@ use Illuminate\Http\RedirectResponse;
 
 class CourseRegistrationController extends Controller
 {
-
     public function index(): View
     {
         $id = Auth::user()->id;
@@ -26,18 +26,20 @@ class CourseRegistrationController extends Controller
         } else {
             $courseregister = CourseRegistration::where('user_id', $user->id)->latest()->paginate(5);
         }
+        // Eager load related models to reduce the number of queries
+        $courseregister->load(['items', 'user']);
 
-        foreach ($courseregister as $order) {
-            $order->items = CourseRegistrationItem::where('order_id', $order->id)->latest()->get();
-
-            $order->participantCount = CourseRegistrationItem::where('order_id', $order->id)->count();
-            $order->totalPrice = formatRupiah(CourseRegistrationItem::where('order_id', $order->id)->sum('price'));
-            $order->company = User::where('id', $order->user_id)->first();
-        }
-
-        return view('courseregister.index', compact('courseregister'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+    foreach ($courseregister as $order) {
+        $order->items = $order->items->sortByDesc('created_at');
+        $order->employed = Employed::find($order->items->pluck('employed_id'));
+        $order->participantCount = $order->items->count();
+        $order->totalPrice = formatRupiah($order->items->sum('price'));
+        $order->company = $order->user;
     }
+
+    return view('courseregister.index', compact('courseregister'))
+        ->with('i', (request()->input('page', 1) - 1) * 5);
+}
 
     public function show(CourseRegistration $courseregistration): View
     {
@@ -47,10 +49,11 @@ class CourseRegistrationController extends Controller
 
     public function create(): View
     {
-            $user = Auth::user();
-            $role = $user->role;
+        $id = Auth::user()->id;
+        $user = User::find($id);
+        $userRoles = $user->getRoleNames();
             $allcourses = Course::all();
-            if ($role === 'Admin') {
+            if ($userRoles->contains('Administrator')) {
                 $employeds = Employed::latest()->paginate(5);
             } else {
                 $employeds = Employed::where('user_id', $user->id)->latest()->paginate(5);
@@ -80,7 +83,8 @@ class CourseRegistrationController extends Controller
         $data = [
             'order_number' => CourseRegistration::generateOrderNumber(),
             'participants' => 0,
-            'kategori' => $request->input('kategori'),
+            'noted' => $request->input('noted'),
+            'status' => 0,
             'user_id' => $user_id
         ];
 
@@ -103,4 +107,39 @@ class CourseRegistrationController extends Controller
         ->with('success', 'Employed created successfully.');
     }
 
+    public function print($id)
+    {
+        $order = CourseRegistration::findOrFail($id);
+        return view('courseregister.print', compact('order'));
+    }
+
+
+    // public function makeRegisterWoocommerce(Request $request)
+    // {
+    //     $orderData = [
+    //         'payment_method' => 'bacs',
+    //         'payment_method_title' => 'Direct Bank Transfer',
+    //         'set_paid' => true,
+    //         'billing' => [
+    //             'first_name' => $request->first_name,
+    //             'last_name' => $request->last_name,
+    //             'address_1' => $request->address_1,
+    //             'city' => $request->city,
+    //             'state' => $request->state,
+    //             'postcode' => $request->postcode,
+    //             'country' => $request->country,
+    //             'email' => $request->email,
+    //             'phone' => $request->phone,
+    //         ],
+    //         'line_items' => [
+    //             [
+    //                 'product_id' => $request->product_id,
+    //                 'quantity' => 1,
+    //             ],
+    //         ],
+    //     ];
+
+    //     $order = $this->wooCommerceService->createOrder($orderData);
+    //     return redirect()->route('employeds.index')->with('success', 'Employeds registered successfully!');
+    // }
 }

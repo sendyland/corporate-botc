@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CourseRegistration;
+use App\Models\Employed;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Contracts\Role;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +28,19 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $id = Auth::user()->id;
+        $user = User::find($id);
+        $userRoles = $user->getRoleNames();
+
+        if ($userRoles->contains('Administrator')) {
+            $orders = CourseRegistration::count();
+            $employeds = Employed::count();
+        } else {
+            $orders = CourseRegistration::where('user_id', $user->id)->where('status', '!=', 0)->count();
+            $employeds = Employed::where('user_id', $user->id)->count();
+            $orders_unpaid = CourseRegistration::where('user_id', $user->id)->whereNotIn('status', [1, 3])->count();
+        }
+        return view('home', compact('orders', 'employeds', 'orders_unpaid'));
     }
+
 }
