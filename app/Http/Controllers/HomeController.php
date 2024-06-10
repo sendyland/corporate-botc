@@ -35,6 +35,7 @@ class HomeController extends Controller
         if ($userRoles->contains('Administrator')) {
             $orders = CourseRegistration::count();
             $employeds = Employed::count();
+            $orders_unpaid = '';
         } else {
             $orders = CourseRegistration::where('user_id', $user->id)->where('status', '!=', 0)->count();
             $employeds = Employed::where('user_id', $user->id)->count();

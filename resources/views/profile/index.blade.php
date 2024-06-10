@@ -76,7 +76,7 @@
 
                                 <div class="row">
                                     <div class="col-lg-3 col-md-4 label">Job</div>
-                                    <div class="col-lg-9 col-md-8">-</div>
+                                    <div class="col-lg-9 col-md-8">{{ $data->position }}</div>
                                 </div>
 
                                 <div class="row">
@@ -130,9 +130,10 @@
                                     </div>
 
                                     <div class="row mb-3">
-                                        <label for="about" class="col-md-4 col-lg-3 col-form-label">About</label>
+                                        <label for="position" class="col-md-4 col-lg-3 col-form-label">Position</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <textarea disabled name="about" class="form-control" id="about" style="height: 100px">-</textarea>
+                                            <input name="position" class="form-control" id="position"
+                                                value="{{ $data->position }}"></input>
                                         </div>
                                     </div>
 
@@ -145,10 +146,10 @@
                                     </div>
 
                                     <div class="row mb-3">
-                                        <label for="Job" class="col-md-4 col-lg-3 col-form-label">Job</label>
+                                        <label for="Employed" class="col-md-4 col-lg-3 col-form-label">Total Crew</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input name="job" type="text" class="form-control" id="Job"
-                                                value="-" disabled>
+                                            <input name="employed" type="text" readonly class="form-control"
+                                                id="employed" value="{{ $employeds }}">
                                         </div>
                                     </div>
 
@@ -164,7 +165,7 @@
                                         <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="address" type="text" class="form-control" id="Address"
-                                                value="-" disabled>
+                                                value="{{ $data->address }}">
                                         </div>
                                     </div>
 

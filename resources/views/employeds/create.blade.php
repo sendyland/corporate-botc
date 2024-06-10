@@ -32,7 +32,7 @@
     @endif
     <div class="row hero">
 
-        <form action="{{ route('employeds.store') }}" method="POST">
+        <form action="{{ route('employeds.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="row g-2">
@@ -89,13 +89,44 @@
                         <input type="text" name="position" class="form-control" placeholder="Position">
                     </div>
                 </div>
+
+                <!-- File Upload -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="form-group">
+                        <strong>File KTP</strong>
+                        <input type="file" name="file_ktp" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="form-group">
+                        <strong>File Foto</strong>
+                        <input type="file" name="file_foto" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="form-group">
+                        <strong>File Ijazah</strong>
+                        <input type="file" name="file_ijazah" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="form-group">
+                        <strong>File CV</strong>
+                        <input type="file" name="file_cv" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="form-group">
+                        <strong>File Seamanbook</strong>
+                        <input type="file" name="file_seamanbook" class="form-control">
+                    </div>
+                </div>
+                <!-- End File Upload -->
+
                 <div class="col-lg-12 col-md-6 mt-2">
                     <button type="submit" class="btn btn-primary">Tambah Peserta</button>
                 </div>
             </div>
         </form>
     </div>
-
-
-
 @endsection

@@ -23,26 +23,48 @@
         </div>
     @endif
 
-    <form action="{{ route('courses.store') }}" method="POST">
+    <form action="{{ route('courses.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Title:</strong>
-                    <input type="text" name="title" class="form-control" placeholder="Title">
+                    <strong>Judul Course</strong>
+                    <input type="text" name="title" class="form-control" placeholder="Title"
+                        value="{{ old('title') }}">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Price:</strong>
-                    <input type="text" name="price" class="form-control" placeholder="Price">
+                    <strong>Harga</strong>
+                    <input type="text" name="price" class="form-control" placeholder="Price"
+                        value="{{ old('price') }}">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Description:</strong>
-                    <textarea class="form-control" style="height:150px" name="description" placeholder="Description"></textarea>
+                    <strong>Deskripsi</strong>
+                    <textarea class="form-control" style="height:150px" name="description" placeholder="Description">{{ old('description') }}</textarea>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Foto</strong>
+                    <input type="file" name="photo" class="form-control">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Referensi Url Learning</strong>
+                    <input type="text" name="url" class="form-control" placeholder="https://"
+                        value="{{ old('url') }}">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Woo ID</strong>
+                    <input type="text" name="woo_id" class="form-control" placeholder="Woo ID"
+                        value="{{ old('woo_id') }}">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">

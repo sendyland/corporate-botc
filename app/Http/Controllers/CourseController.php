@@ -6,6 +6,7 @@ use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 
 class CourseController extends Controller
 {
@@ -33,14 +34,47 @@ class CourseController extends Controller
     {
         $request->validate([
             'title' => 'required|string',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'required|string',
+            'price' => 'required|numeric',
+            'url' => 'required|string|url',
+            'woo_id' => 'required|integer',
         ]);
 
-        Course::create($request->all());
+        try {
+            // Handle file upload
+            if ($request->hasFile('photo')) {
+                $fileName = time().'.'.$request->photo->extension();
+                $request->photo->move(public_path('uploads/course'), $fileName);
+                $photoPath = $fileName;
+            } else {
+                $photoPath = null; // Atau Anda bisa memberikan nilai default atau penanganan lainnya
+            }
 
-        return redirect()->route('courses.index')
-            ->with('success', 'Course created successfully.');
+            // Create course using explicit assignment
+            $course = Course::create([
+                'title' => $request->input('title'),
+                'photo' => $photoPath,
+                'description' => $request->input('description'),
+                'price' => $request->input('price'),
+                'url' => $request->input('url'),
+                'woo_id' => $request->input('woo_id'),
+            ]);
+
+            return redirect()->route('courses.index')
+                ->with('success', 'Course created successfully.');
+        } catch (\Exception $e) {
+            // Log error
+            Log::error('Error creating course: ' . $e->getMessage(), [
+                'request_data' => $request->all(),
+                'exception' => $e,
+            ]);
+
+            return redirect()->route('courses.index')
+                ->with('error', 'Error creating course: ' . $e->getMessage());
+        }
     }
+
 
     public function show(Course $course): View
     {
@@ -56,20 +90,53 @@ class CourseController extends Controller
     {
         $request->validate([
             'title' => 'required|string',
-            'description' => 'required|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'price' => 'required|numeric',
+            'url' => 'required|string|url',
         ]);
 
-        $course->update($request->all());
+        try {
+            // Handle file upload
+            if ($request->hasFile('photo')) {
+                $fileName = time().'.'.$request->photo->extension();
+                $request->photo->move(public_path('uploads/course'), $fileName);
+                $photoPath = $fileName;
+            } else {
+                $photoPath = $course->photo; // Jika tidak ada file baru diunggah, gunakan foto yang sudah ada
+            }
 
-        return redirect()->route('courses.index')
-            ->with('success', 'Course updated successfully');
+            $course->update([
+                'title' => $request->input('title'),
+                'photo' => $photoPath,
+                'description' => $request->input('description'),
+                'price' => $request->input('price'),
+                'url' => $request->input('url'),
+                'woo_id' => $request->input('woo_id'),
+            ]);
+
+            return redirect()->route('courses.index')
+                ->with('success', 'Course updated successfully');
+        } catch (\Exception $e) {
+            // Log error
+            Log::error('Error updating course: ' . $e->getMessage(), [
+                'request_data' => $request->all(),
+                'exception' => $e,
+            ]);
+
+            return redirect()->route('courses.index')
+                ->with('error', 'Error updating course: ' . $e->getMessage());
+        }
     }
 
     public function destroy(Course $course): RedirectResponse
     {
-        $course->delete();
-
-        return redirect()->route('courses.index')
-            ->with('success', 'Course deleted successfully');
+        try {
+            $course->delete();
+            return redirect()->route('courses.index')
+                ->with('success', 'Course deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('courses.index')
+                ->with('error', 'Error deleting course: ' . $e->getMessage());
+        }
     }
 }

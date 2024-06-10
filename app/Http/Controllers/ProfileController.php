@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employed;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,8 @@ class ProfileController extends Controller
     {
         $datauser = auth()->user()->id;
         $data = User::find($datauser);
-        return view('profile.index', compact('data'));
+        $employeds = Employed::where('user_id', $datauser)->count();
+        return view('profile.index', compact('data', 'employeds'));
     }
 
     public function update(Request $request)
@@ -24,6 +26,8 @@ class ProfileController extends Controller
         $user->namepic = $request->input('fullName');
         $user->name = $request->input('company');
         $user->phone = $request->input('phone');
+        $user->position = $request->input('position');
+        $user->address = $request->input('address');
         // $user->email = $request->input('email');
         // tambahkan field lainnya sesuai kebutuhan
 

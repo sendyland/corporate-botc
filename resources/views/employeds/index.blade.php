@@ -65,11 +65,12 @@
                             <td>{{ $employed->position }}</td>
                             <td>{{ $employed->status }}</td>
                             <td>
-                                @if ($employed->status_woo == 0)
+                                {{-- @if ($employed->status_woo == 0)
                                     <span class="badge bg-warning">Belum Register</span>
                                 @else
                                     <span class="badge bg-info">Sudah Register</span>
-                                @endif
+                                @endif --}}
+                                -
                             </td>
                             <td></td>
                             @canany(['employed-view', 'employed-edit', 'employed-delete'])
@@ -84,7 +85,8 @@
                                             <div class="modal-dialog modal-l">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title">Detail Company {{ $employed->company->name }}
+                                                        <h5 class="modal-title">Detail Employed Company
+                                                            {{ $employed->company->name }}
                                                         </h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
@@ -103,6 +105,137 @@
                                                                 <td>Tempat Lahir :</td>
                                                                 <td>{{ $employed->tempat_lahir }}</td>
                                                             </tr>
+                                                            <!-- File Upload -->
+                                                            <tr>
+                                                                <td>File KTP</td>
+                                                                <td>
+                                                                    @if ($employed->file_ktp)
+                                                                        @php
+                                                                            $allowedExtensions = [
+                                                                                '.jpg',
+                                                                                '.jpeg',
+                                                                                '.png',
+                                                                                '.gif',
+                                                                                '.bmp',
+                                                                            ];
+                                                                            $fileExtension = strtolower(
+                                                                                pathinfo(
+                                                                                    $employed->file_ktp,
+                                                                                    PATHINFO_EXTENSION,
+                                                                                ),
+                                                                            );
+                                                                        @endphp
+                                                                        @if (in_array($fileExtension, $allowedExtensions))
+                                                                            <img src="{{ asset('storage/' . $employed->file_ktp) }}"
+                                                                                alt="KTP Image" style="max-width: 100px;">
+                                                                        @else
+                                                                            <a href="{{ asset('storage/' . $employed->file_ktp) }}"
+                                                                                target="_blank">View File</a>
+                                                                        @endif
+                                                                    @else
+                                                                        No file uploaded
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>File Foto</td>
+                                                                <td>
+                                                                    @if ($employed->file_foto)
+                                                                        @php
+                                                                            $fileExtension = strtolower(
+                                                                                pathinfo(
+                                                                                    $employed->file_foto,
+                                                                                    PATHINFO_EXTENSION,
+                                                                                ),
+                                                                            );
+                                                                        @endphp
+                                                                        @if (in_array($fileExtension, $allowedExtensions))
+                                                                            <img src="{{ asset('storage/' . $employed->file_foto) }}"
+                                                                                alt="Foto Image" style="max-width: 100px;">
+                                                                        @else
+                                                                            <a href="{{ asset('storage/' . $employed->file_foto) }}"
+                                                                                target="_blank">View File</a>
+                                                                        @endif
+                                                                    @else
+                                                                        No file uploaded
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>File Ijazah</td>
+                                                                <td>
+                                                                    @if ($employed->file_ijazah)
+                                                                        @php
+                                                                            $fileExtension = strtolower(
+                                                                                pathinfo(
+                                                                                    $employed->file_ijazah,
+                                                                                    PATHINFO_EXTENSION,
+                                                                                ),
+                                                                            );
+                                                                        @endphp
+                                                                        @if (in_array($fileExtension, $allowedExtensions))
+                                                                            <img src="{{ asset('storage/' . $employed->file_ijazah) }}"
+                                                                                alt="Ijazah Image" style="max-width: 100px;">
+                                                                        @else
+                                                                            <a href="{{ asset('storage/' . $employed->file_ijazah) }}"
+                                                                                target="_blank">View File</a>
+                                                                        @endif
+                                                                    @else
+                                                                        No file uploaded
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>File CV</td>
+                                                                <td>
+                                                                    @if ($employed->file_cv)
+                                                                        @php
+                                                                            $fileExtension = strtolower(
+                                                                                pathinfo(
+                                                                                    $employed->file_cv,
+                                                                                    PATHINFO_EXTENSION,
+                                                                                ),
+                                                                            );
+                                                                        @endphp
+                                                                        @if (in_array($fileExtension, $allowedExtensions))
+                                                                            <img src="{{ asset('storage/' . $employed->file_cv) }}"
+                                                                                alt="CV Image" style="max-width: 100px;">
+                                                                        @else
+                                                                            <a href="{{ asset('storage/' . $employed->file_cv) }}"
+                                                                                target="_blank">View File</a>
+                                                                        @endif
+                                                                    @else
+                                                                        No file uploaded
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>File Seamanbook</td>
+                                                                <td>
+                                                                    @if ($employed->file_seamanbook)
+                                                                        @php
+                                                                            $fileExtension = strtolower(
+                                                                                pathinfo(
+                                                                                    $employed->file_seamanbook,
+                                                                                    PATHINFO_EXTENSION,
+                                                                                ),
+                                                                            );
+                                                                        @endphp
+                                                                        @if (in_array($fileExtension, $allowedExtensions))
+                                                                            <img src="{{ asset('storage/' . $employed->file_seamanbook) }}"
+                                                                                alt="Seamanbook Image"
+                                                                                style="max-width: 100px;">
+                                                                        @else
+                                                                            <a href="{{ asset('storage/' . $employed->file_seamanbook) }}"
+                                                                                target="_blank">View File</a>
+                                                                        @endif
+                                                                    @else
+                                                                        No file uploaded
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                            <!-- End File Upload -->
+
                                                         </table>
                                                     </div>
                                                     <div class="modal-footer">

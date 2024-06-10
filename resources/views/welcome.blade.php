@@ -71,7 +71,7 @@
 
             <div>
                 <a class="btn-getstarted scrollto" href="{{ route('login') }}">Login</a>
-                <a class="btn-getstarted scrollto" href="{{ route('register') }}">Register Now</a>
+                {{-- <a class="btn-getstarted scrollto" href="{{ route('register') }}">Register Now</a> --}}
             </div>
 
 
@@ -149,7 +149,7 @@
         </section><!-- End About Section -->
 
         <!-- ======= Clients Section ======= -->
-        <section id="clients" class="clients">
+        {{-- <section id="clients" class="clients">
             <div class="container" data-aos="zoom-out">
 
                 <div class="clients-slider swiper">
@@ -174,10 +174,11 @@
                 </div>
 
             </div>
-        </section><!-- End Clients Section -->
+        </section> --}}
+        <!-- End Clients Section -->
 
         <!-- ======= Call To Action Section ======= -->
-        <section id="cta" class="cta">
+        {{-- <section id="cta" class="cta">
             <div class="container" data-aos="zoom-out">
 
                 <div class="row g-5">
@@ -200,10 +201,11 @@
                 </div>
 
             </div>
-        </section><!-- End Call To Action Section -->
+        </section> --}}
+        <!-- End Call To Action Section -->
 
         <!-- ======= On Focus Section ======= -->
-        <section id="onfocus" class="onfocus">
+        {{-- <section id="onfocus" class="onfocus">
             <div class="container-fluid p-0" data-aos="fade-up">
 
                 <div class="row g-0">
@@ -234,7 +236,8 @@
                 </div>
 
             </div>
-        </section><!-- End On Focus Section -->
+        </section> --}}
+        <!-- End On Focus Section -->
 
         <!-- ======= Services Section ======= -->
         <section id="services" class="services">
@@ -308,6 +311,121 @@
 
             </div>
         </section><!-- End Services Section -->
+        <!-- ======= Rekanan Perusahaan Section ======= -->
+        <section id="services" class="services">
+            <div class="container" data-aos="fade-up">
+                <div class="section-header">
+                    <h2>Our Clients</h2>
+                </div>
+
+                <div class="row gy-5">
+                    <div class="col-lg-12">
+                        <img src="{{ asset('landing/assets/img/client.png') }}" alt="">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ======= END Rekanan Perusahaan Section ======= -->
+        <!-- ======= Client Perusahaan Section ======= -->
+        <section id="services" class="services">
+            <div class="container" data-aos="fade-up">
+                <div class="section-header">
+                    <h2>Our Clients</h2>
+                </div>
+
+                <div class="row gy-5">
+                    <div class="col-lg-4">
+                        <ul class="list-group">
+                            <!-- List Perusahaan -->
+                            <li class="list-group-item">PT. TENAGA BARU NUANSA PERSADA</li>
+                            <li class="list-group-item">PT. ABM</li>
+                            <li class="list-group-item">PT. JASINDO DUTA SEGARA</li>
+                            <li class="list-group-item">PT. KAISC MULIA</li>
+                            <li class="list-group-item">Korin Global Mandiri</li>
+                            <li class="list-group-item">PT. JOSH LARSEN</li>
+                            <li class="list-group-item">PT. ARPENI</li>
+                            <li class="list-group-item">PT. ABB</li>
+                            <li class="list-group-item">PT. GREEN MARINDO ABADI</li>
+                            <li class="list-group-item">PT. INDO POWER</li>
+                            <li class="list-group-item">PT. OCEANINDO PRIMA SARANA</li>
+                            <li class="list-group-item">PT. AZRIGAH SEJAHTERA</li>
+                            <li class="list-group-item">PT. JASA INTERNATIONAL MARITIME (JIM)</li>
+                            <li class="list-group-item">PT. KANAYA</li>
+                            <li class="list-group-item">PT. AMAS SAMUDRA JAYA</li>
+                            <li class="list-group-item">PT. AMAS ISCINDO UTAMA</li>
+                            <li class="list-group-item">PT. IOS BATAM</li>
+                            <li class="list-group-item">PT. PIL</li>
+                            <li class="list-group-item">PT. SUKMA OCEAN</li>
+                            <li class="list-group-item">PT. KSM</li>
+                            <li class="list-group-item">PT. LIBERTY</li>
+                            <li class="list-group-item">PT. SANDI GENESIS SAMUEL</li>
+                            <li class="list-group-item">PT. SODEXO</li>
+
+                            <li class="list-group-item">PT. MBSS</li>
+                            <li class="list-group-item">PT. WINNING SHIPPING INDONESIA</li>
+
+                    </div>
+                    <div class="col-lg-4">
+                        <ul class="list-group">
+                            <li class="list-group-item">PT. ABIYASA PUTRA SAMUDRA</li>
+                            <li class="list-group-item">PT. AWEIDHIA</li>
+                            <li class="list-group-item">PT. BSM</li>
+                            <li class="list-group-item">PT. SEA ATLANTIK</li>
+                            <li class="list-group-item">PT. ALPA MAGSAYSAY</li>
+                            <li class="list-group-item">PT. METRO OCEAN</li>
+                            <li class="list-group-item">PT. DENAWA GEMAH SAMUDERA</li>
+                            <li class="list-group-item">PT. BERKAT LAUTAN TERANG</li>
+                            <li class="list-group-item">PT. ARION MITRA BERSAMA</li>
+                            <li class="list-group-item">PT. ALIYAH EST INDONESIA</li>
+                            <li class="list-group-item">PT. WAHANA RAHMA</li>
+                            <li class="list-group-item">PT. GLC INDONESIA</li>
+                            <li class="list-group-item">PT. WARUNA NUSA SENTANA</li>
+                            <li class="list-group-item">PT. BJM</li>
+                            <li class="list-group-item">PT. ATLAS PROFESIONAL</li>
+                            <li class="list-group-item">PT. MCS</li>
+                            <li class="list-group-item">PT. KIA MARINDO JUSEMA</li>
+                            <li class="list-group-item">PT. TRI MAN SEJAHTERA</li>
+                            <li class="list-group-item">PT. TOS INDONESIA</li>
+                            <li class="list-group-item">PT. MULTI KREASI SENALAUT SERVICES</li>
+                            <li class="list-group-item">PT. SOECHI LINE</li>
+
+                            <li class="list-group-item">PT. PALOMA SEJATI</li>
+                            <li class="list-group-item">PT. INKOR DUNIA SAMUDERA</li>
+                            <li class="list-group-item">PT. AKR SEA TRANSPORT</li>
+                            <li class="list-group-item">PT. SAFE WATER CREW SERVICE</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4">
+                        <ul class="list-group">
+                            <li class="list-group-item">PT. SPIL</li>
+                            <li class="list-group-item">PT. LAUTAN JAYA HASANAH</li>
+                            <li class="list-group-item">SPHI FOODS (BRUNEI DARUSSALAM)</li>
+                            <li class="list-group-item">SRIKANDI OFFSHORE (BRUNEI DARUSSALAM)</li>
+                            <li class="list-group-item">PT. INDOMARITIME MANAGEMENT</li>
+                            <li class="list-group-item">PT. EQUINOX BAHARI UTAMA</li>
+                            <li class="list-group-item">PT. BAYU MARITIM BERKAH</li>
+                            <li class="list-group-item">PT. DUTA LAYAR PRATAMA</li>
+                            <li class="list-group-item">PT. TRANSINDO LANSER</li>
+                            <li class="list-group-item">PT. SUKSES GRAHA SAMUDERA (MEO)</li>
+                            <li class="list-group-item">PT. TIMAS</li>
+                            <li class="list-group-item">PT. SAMUDERA INDONESIA</li>
+                            <li class="list-group-item">PT. PNEP</li>
+                            <li class="list-group-item">PT. PRIMA BUANA</li>
+                            <li class="list-group-item">PT. SINGAPORE MARITIME SERVICE (PT. SMS)</li>
+                            <li class="list-group-item">PT. DALUWU SAMUDERA MEMBERKATI</li>
+                            <li class="list-group-item">PT. YUDIAN UNGGUL INDONESIA</li>
+                            <li class="list-group-item">PT. BAHTERA REZEKI ABADI</li>
+                            <li class="list-group-item">PT. PUTRI MANDIRI</li>
+                            <li class="list-group-item">PT. TIRTA SAMUDERA CARAKA</li>
+                            <li class="list-group-item">PT. ACAK SAMUDERA</li>
+                            <li class="list-group-item">PT. DELPHINE COMAR INDONESIA</li>
+                            <li class="list-group-item">PT. HANCANG INDONESIA</li>
+                            <li class="list-group-item">PT. PACIFIC CARRIERS LIMITED (PCL)</li>
+                        </ul>
+                    </div>
+
+                </div>
+        </section><!-- End Client Perusahaan Section -->
 
         <!-- ======= Testimonials Section ======= -->
         <section id="testimonials" class="testimonials">
@@ -330,8 +448,9 @@
                                 <p>
                                     <i class="bi bi-quote quote-icon-left"></i>
 
-                                    I wanted to place a review since their support helped me within a day or so, which
-                                    is nice! Thanks and 5 stars!
+
+                                    Very good and fast support during the week. They know what you need, exactly when
+                                    you need it.
                                     <i class="bi bi-quote quote-icon-right"></i>
                                 </p>
                             </div>
@@ -351,8 +470,9 @@
                                 <p>
                                     <i class="bi bi-quote quote-icon-left"></i>
 
-                                    ThemeMove deserves 5 star for theme's features, design quality, flexibility, and
-                                    support service!
+
+                                    I wanted to place a review since their support helped me within a day or so, which
+                                    is nice! Thanks and 5 stars!
                                     <i class="bi bi-quote quote-icon-right"></i>
                                 </p>
                             </div>
@@ -372,7 +492,8 @@
                                 <p>
                                     <i class="bi bi-quote quote-icon-left"></i>
 
-                                    Very good and fast support during the week. They know what you need, exactly when
+                                    Very good and fast support during the week. They know what you need,
+                                    exactly when
                                     you need it.
                                     <i class="bi bi-quote quote-icon-right"></i>
                                 </p>
@@ -393,7 +514,8 @@
                                 <p>
                                     <i class="bi bi-quote quote-icon-left"></i>
 
-                                    I wanted to place a review since their support helped me within a day or so, which
+                                    I wanted to place a review since their support helped me within a
+                                    day or so, which
                                     is nice! Thanks and 5 stars!
                                     <i class="bi bi-quote quote-icon-right"></i>
                                 </p>
