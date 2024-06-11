@@ -3,12 +3,12 @@
 
 @section('content')
     <div class="pagetitle">
-        <h1>Products</h1>
+        <h1>Users</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item">Product</li>
-                <li class="breadcrumb-item active">Edit Product</li>
+                <li class="breadcrumb-item">User</li>
+                <li class="breadcrumb-item active">Edit User</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
