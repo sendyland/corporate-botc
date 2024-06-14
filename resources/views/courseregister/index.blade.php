@@ -342,9 +342,14 @@
                                         </div>
                                         @canany(['checkout-edit', 'checkout-delete'])
                                             @can('checkout-edit')
-                                                <a class="btn btn-warning btn-sm"
+                                                <a class="btn btn-success btn-sm"
                                                     href="{{ route('course-order.edit', $order->id) }}"><i
-                                                        class="bi bi-pencil-square"></i></a>
+                                                        class="bi bi-card-checklist"></i></a>
+                                                @if ($order->status == 1)
+                                                    <a class="btn btn-primary btn-sm"
+                                                        href="{{ route('course-order.payment', $order->id) }}"><i
+                                                            class="bi bi-currency-dollar"></i></a>
+                                                @endif
                                             @endcan
                                             @csrf
                                             @method('DELETE')

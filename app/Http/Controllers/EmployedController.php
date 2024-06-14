@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ParticipantRegisteredAccount;
 
 class EmployedController extends Controller
 {
@@ -72,12 +74,13 @@ class EmployedController extends Controller
 
         $company_id = Auth::user()->id;
         $username = Str::before($request->email, '@');
+        $password = Str::random(18);
         $wpData = [
             'username' => $username,
             'first_name' => $first_name,
             'last_name' => $last_name,
             'email' => $request->email,
-            'password' => 'defaultPassword123',
+            'password' => $password,
         ];
 
         // Inisialisasi Guzzle Client
@@ -124,7 +127,7 @@ class EmployedController extends Controller
         $fileSeamanbook = $request->file('file_seamanbook') ? $request->file('file_seamanbook')->store('upload/employed/file_seamanbook', 'public') : null;
 
         // Simpan data ke database Laravel
-        Employed::create([
+        $employed = Employed::create([
             'name' => $request->name,
             'tempat_lahir' => $request->tempat_lahir,
             'tgl_lahir' => $request->tgl_lahir,
@@ -143,8 +146,11 @@ class EmployedController extends Controller
             'wp_id' => $wordpressUserId,
         ]);
 
+        // Kirim email pemberitahuan ke peserta
+        Mail::to($employed->email)->send(new ParticipantRegisteredAccount($employed, $password));
+
         return redirect()->route('employeds.index')
-            ->with('success', 'Employed created successfully.');
+            ->with('success', 'Employed created successfully and email sent.');
     }
 
 

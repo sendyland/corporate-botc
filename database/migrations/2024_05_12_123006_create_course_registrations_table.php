@@ -20,7 +20,9 @@ return new class extends Migration
             $table->string('status_payment');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('user_id_approve');
+            $table->unsignedBigInteger('user_id_approve');
             $table->timestamps('approve_at');
+            $table->timestamps('payment_at');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Mengubah referensi

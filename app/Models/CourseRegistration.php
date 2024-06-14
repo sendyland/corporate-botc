@@ -18,7 +18,9 @@ class CourseRegistration extends Model
         'status_payment',
         'user_id',
         'user_id_approve',
-        'approve_at'
+        'user_id_payment',
+        'approve_at',
+        'payment_at'
     ];
 
     public function items()

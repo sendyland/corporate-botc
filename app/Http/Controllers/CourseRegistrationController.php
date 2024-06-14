@@ -15,6 +15,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use App\Mail\CourseRegistrationApproved;
+use App\Mail\ParticipantRegistered;
+use Illuminate\Support\Facades\Mail;
 
 class CourseRegistrationController extends Controller
 {
@@ -110,6 +113,7 @@ class CourseRegistrationController extends Controller
             'participants' => 0,
             'noted' => $request->input('noted'),
             'status' => 0,
+            'status_payment' => 0,
             'user_id' => $user_id
         ];
 
@@ -164,18 +168,33 @@ class CourseRegistrationController extends Controller
 
         // Find the course registration by the given ID
         $courseRegistration = CourseRegistration::findOrFail($id);
+        $courseRegistration->status = $request->input('status');
+
+        if ($request->status == 1) {
+            $status_payment = 0;
+        } else {
+            $status_payment = 0;
+        }
 
         // Update the course registration with the new values
         $courseRegistration->update([
             'user_id_approve' => Auth::user()->id,
             'approve_at' => Carbon::now(),
             'status' => $request->status,
-            'status_payment' => $request->status
+            'status_payment' => $status_payment
         ]);
         if ($request->status == 1) {
              // Get all course registration items associated with the order_id
         $items = CourseRegistrationItem::where('order_id', $id)->get();
+        if ($request->input('status') == 1) {
+            // Mengirim email persetujuan ke perusahaan
+            Mail::to($courseRegistration->user->email)->send(new CourseRegistrationApproved($courseRegistration));
 
+            // Mengirim email ke setiap peserta
+            foreach ($courseRegistration->items as $item) {
+                Mail::to($item->employed->email)->send(new ParticipantRegistered($item->employed, $item->course));
+            }
+        }
         // Array to collect enrollment_ids
         $enrollmentIds = [];
 
@@ -215,6 +234,43 @@ private function fetchEnrollmentIdFromExternalAPI($item)
         Log::error('Error creating enrollment: ' . $e->getMessage());
         return null;
     }
+}
+
+public function payment($id):View
+{
+    // Find the course registration by the given ID
+    $courseRegistration = CourseRegistration::with(['items', 'user'])->findOrFail($id);
+
+    // Adjust items data
+    $courseRegistration->items->transform(function ($item, $key) {
+        $item->employed = Employed::find($item->employed_id);
+        return $item;
+    });
+
+    // Calculate additional details
+    $participantCount = $courseRegistration->items->count();
+    $totalPrice = $courseRegistration->items->sum('price');
+
+    return view('courseregister.payment', compact('courseRegistration', 'participantCount', 'totalPrice'));
+}
+
+public function update_payment(Request $request, $id): RedirectResponse
+{
+    // Validate the request input
+    $request->validate([
+        'status' => 'nullable|string|max:255',
+    ]);
+
+    // Find the course registration by the given ID
+    $courseRegistration = CourseRegistration::findOrFail($id);
+    $courseRegistration->update([
+        'user_id_payment' => Auth::user()->id,
+        'payment_at' => Carbon::now(),
+        'status_payment' => $request->status,
+    ]);
+
+    return redirect()->route('course-order.index')
+    ->with('success', 'Course Registration Paymemt Updated.');
 }
 
 

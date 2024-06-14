@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\EmployedController;
 use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TestEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,8 @@ use App\Http\Controllers\ProfileController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/send-test-email', [TestEmailController::class, 'sendTestEmail']);
+Route::get('/send-test-email-employed', [TestEmailController::class, 'testEmail']);
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
@@ -43,4 +45,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('courses', CourseController::class);
     Route::resource('course-order', CourseRegistrationController::class);
     Route::get('course-order/{id}/print', [CourseRegistrationController::class, 'print'])->name('course-order.print');
+    Route::get('course-order/{id}/payment', [CourseRegistrationController::class, 'payment'])->name('course-order.payment');
+    Route::put('course-order/payment/{id}', [CourseRegistrationController::class, 'update_payment'])->name('course-order.update_payment');
 });
