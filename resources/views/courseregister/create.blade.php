@@ -24,26 +24,24 @@
     @endif
 
     <div class="row">
-        <!--begin::Content-->
+
         <div class="col-lg-12">
-            <!--begin::Card-->
+
             <div class="card">
-                <!--begin::Card body-->
+
                 <div class="card-body p-12">
-                    <!--begin::Form-->
+
                     <form action="{{ route('course.registration') }}" method="POST">
                         @csrf
-                        <!--begin::Wrapper-->
-                        <!--begin::Separator-->
+
                         <h5 class="card-title">Register Peserta Course</h5>
-                        <!--end::Separator-->
-                        <!--begin::Wrapper-->
+
                         <div class="mb-0">
-                            <!--begin::Table wrapper-->
+
                             <div class="table-responsive mb-10">
-                                <!--begin::Table-->
+
                                 <table class="table table-bordered mt-2" data-kt-element="items">
-                                    <!--begin::Table head-->
+
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -56,8 +54,7 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <!--end::Table head-->
-                                    <!--begin::Table body-->
+
                                     <tbody id="item-table">
                                         <tr class="border-bottom border-bottom-dashed">
                                             <td class="item-number">1</td>
@@ -69,7 +66,7 @@
                                                     @foreach ($employeds as $employed)
                                                         <option value="{{ $employed->id }}"
                                                             {{ old('program') == $employed->id ? 'selected' : '' }}>
-                                                            {{ $employed->name }}
+                                                            {{ $employed->name }} - {{ $employed->email }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -97,8 +94,7 @@
                                             </td>
                                         </tr>
                                     </tbody>
-                                    <!--end::Table body-->
-                                    <!--begin::Table foot-->
+
                                     <tfoot>
                                         <tr class="border-top border-top-dashed align-top fs-6 fw-bold text-gray-700">
                                             <th class="text-primary"></th>
@@ -123,11 +119,9 @@
                                             <th></th>
                                         </tr>
                                     </tfoot>
-                                    <!--end::Table foot-->
+
                                 </table>
                             </div>
-                            <!--end::Table-->
-                            <!--begin::Notes-->
                             <div class="mb-0">
                                 <label class="form-label fs-6 fw-bold text-gray-700">Notes</label>
                                 <textarea name="noted" class="form-control form-control-solid" rows="3"
@@ -136,17 +130,17 @@
                             <div class="mt-2">
                                 <button class="btn btn-primary">Daftarkan Peserta</button>
                             </div>
-                            <!--end::Notes-->
+
                         </div>
-                        <!--end::Wrapper-->
+
                     </form>
-                    <!--end::Form-->
+
                 </div>
-                <!--end::Card body-->
+
             </div>
-            <!--end::Card-->
+
         </div>
-        <!--end::Content-->
+
     </div>
 @endsection
 

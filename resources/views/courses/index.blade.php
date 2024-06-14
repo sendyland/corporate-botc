@@ -10,6 +10,50 @@
         h5.card-title.product {
             font-size: 16px;
         }
+
+        .form-group {
+            line-height: 30px;
+        }
+
+        .loading-overlay {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+        }
+
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+        }
+
+        .loading-text {
+            color: #fff;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 @endsection
 
@@ -25,8 +69,13 @@
     </div><!-- End Page Title -->
 
     @can('course-create')
-        <a class="btn btn-success" href="{{ route('courses.create') }}"> Create Course</a>
+        <a class="btn btn-success" id="createCourseBtn" href="{{ route('courses.create') }}">Create Course</a>
     @endcan
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Data Course</div>
+    </div>
 
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
@@ -47,8 +96,7 @@
                             <div class="card">
                                 <a href="{{ $course->url }}" target="__blank">
                                     @if ($course->photo)
-                                        <img src="{{ asset('uploads/course/' . $course->photo) }}" alt="Photo"
-                                            class="card-img-top">
+                                        <img src="{{ $course->photo }}" alt="Photo" class="card-img-top">
                                     @else
                                         <img src="assets/img/card-course.jpg" class="card-img-top" alt="...">
                                     @endif
@@ -119,6 +167,11 @@
                         });
                     });
                 });
+            });
+        </script>
+        <script>
+            document.getElementById('createCourseBtn').addEventListener('click', function(event) {
+                document.getElementById('loading').style.display = 'flex';
             });
         </script>
     @endsection

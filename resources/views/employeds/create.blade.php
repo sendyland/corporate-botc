@@ -5,6 +5,45 @@
         .form-group {
             line-height: 30px;
         }
+
+        .loading-overlay {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+        }
+
+        .loading-text {
+            color: #fff;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 @endsection
 
@@ -31,14 +70,10 @@
         </div>
     @endif
     <div class="row hero">
-
-        <form action="{{ route('employeds.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="myForm" action="{{ route('employeds.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-
             <div class="row g-2">
-                <div class="col-8">
-
-                </div>
+                <div class="col-8"></div>
                 <h5>Pendaftaran Peserta</h5>
                 <div class="col-lg-6 col-md-6">
                     <div class="form-group">
@@ -46,7 +81,6 @@
                         <input type="text" name="name" class="form-control" required placeholder="Name">
                     </div>
                 </div>
-
                 <div class="col-lg-6 col-md-6">
                     <div class="form-group">
                         <strong>Tempat Lahir</strong>
@@ -82,14 +116,12 @@
                         <input type="text" name="telp" class="form-control" placeholder="No Telp">
                     </div>
                 </div>
-
                 <div class="col-lg-6 col-md-6">
                     <div class="form-group">
                         <strong>Position</strong>
                         <input type="text" name="position" class="form-control" placeholder="Position">
                     </div>
                 </div>
-
                 <!-- File Upload -->
                 <div class="col-lg-6 col-md-6">
                     <div class="form-group">
@@ -122,11 +154,23 @@
                     </div>
                 </div>
                 <!-- End File Upload -->
-
                 <div class="col-lg-12 col-md-6 mt-2">
                     <button type="submit" class="btn btn-primary">Tambah Peserta</button>
                 </div>
             </div>
         </form>
+        <!-- Loading Overlay -->
+        <div id="loading" class="loading-overlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading - Insert Data User Learning</div>
+        </div>
     </div>
+@endsection
+
+@section('myscript')
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            document.getElementById('loading').style.display = 'flex';
+        });
+    </script>
 @endsection

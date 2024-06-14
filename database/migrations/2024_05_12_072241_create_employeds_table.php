@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('file_ijazah')->nullable();
             $table->string('file_cv')->nullable();
             $table->string('file_seamanbook')->nullable();
+            $table->unsignedBigInteger('wp_id');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

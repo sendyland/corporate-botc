@@ -11,10 +11,14 @@ class CourseRegistration extends Model
 
     protected $fillable = [
         'user_id',
-        'participants',
         'order_number',
+        'participants',
         'noted',
-        'status'
+        'status',
+        'status_payment',
+        'user_id',
+        'user_id_approve',
+        'approve_at'
     ];
 
     public function items()

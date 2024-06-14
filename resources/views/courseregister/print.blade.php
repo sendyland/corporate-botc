@@ -15,15 +15,15 @@
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6 text-right mt-2">
                             <div class="receipt-right">
-                                <h5>{{ $order->name }}
+                                <h5>{{ $order->user->name }}
                                 </h5>
                                 <p>Telp :
-                                    {{ $order->telp }} <i class="fa fa-phone"></i></p>
+                                    {{ $order->user->phone }} <i class="fa fa-phone"></i></p>
                                 <p>Email :
-                                    {{ $order->email }} <i class="fa fa-envelope-o"></i>
+                                    {{ $order->user->email }} <i class="fa fa-envelope-o"></i>
                                 </p>
                                 <p>Alamat :
-                                    {{ $order->address }}
+                                    {{ $order->user->address }}
                                     <i class="fa fa-location-arrow"></i>
                                 </p>
                             </div>
@@ -35,7 +35,7 @@
                         <div class="col-xs-8 col-sm-8 col-md-8 text-left">
                             <div class="receipt-right">
                                 <h5>PIC :
-                                    {{ $order->namepic }}
+                                    {{ $order->user->namepic }}
                                 </h5>
                                 <p><b>INVOICE :
                                         {{ $order->order_number }}</b>
@@ -48,14 +48,19 @@
             <table width="100%" class="table table-bordered mt-4">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>Nama Peserta</th>
                         <th>Course</th>
                         <th>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $no = 1;
+                    @endphp
                     @foreach ($order->items as $item)
                         <tr>
+                            <td>{{ $no++ }}</td>
                             <td>{{ $item->employed->name }}</td>
                             <td>{{ $item->course->title }}</td>
                             <td>{{ formatRupiah($item->price) }}

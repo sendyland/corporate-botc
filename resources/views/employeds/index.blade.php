@@ -65,17 +65,20 @@
                             <td>{{ $employed->position }}</td>
                             <td>{{ $employed->status }}</td>
                             <td>
-                                {{-- @if ($employed->status_woo == 0)
-                                    <span class="badge bg-warning">Belum Register</span>
+                                @if ($employed->wp_id)
+                                    <span class="badge bg-info">Terdaftar</span>
                                 @else
-                                    <span class="badge bg-info">Sudah Register</span>
-                                @endif --}}
-                                -
+                                    <span class="badge bg-warning">Belum Terdaftar</span><br>
+                                    <span class="badge bg-warning">Hubungi Admin</span>
+                                @endif
+
                             </td>
                             <td></td>
                             @canany(['employed-view', 'employed-edit', 'employed-delete'])
                                 <td>
-                                    <form action="{{ route('employeds.destroy', $employed->id) }}" method="POST">
+                                    <form id="delete-form-{{ $employed->id }}"
+                                        action="{{ route('employeds.destroy', $employed->id) }}" method="POST">
+
                                         <a href="#" order="{{ $employed->id }}" class="print btn btn-primary btn-sm"
                                             data-bs-toggle="modal" data-bs-target="#ExtralargeModal{{ $employed->id }}">
                                             <i class="bi bi-printer"></i>
@@ -251,12 +254,13 @@
                                                 href="{{ route('employeds.edit', $employed->id) }}"><i
                                                     class="bi bi-pencil"></i></a>
                                         @endcan
-
                                         @csrf
                                         @method('DELETE')
                                         @can('employed-delete')
-                                            <button type="submit" class="btn btn-danger btn-sm"><i
-                                                    class="bi bi-trash"></i></button>
+                                            <button type="button" class="btn btn-danger btn-sm delete-employed"
+                                                data-employee-id="{{ $employed->id }}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
                                         @endcan
                                     </form>
                                 </td>
@@ -271,4 +275,34 @@
             </div>
         </div>
     </div>
+@endsection
+@section('myscript')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.delete-employed');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const employedId = this.getAttribute('data-employee-id');
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'You will not be able to recover this employed!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Submit form
+                            const form = document.getElementById(
+                                `delete-form-${employedId}`);
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 @endsection

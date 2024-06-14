@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CourseRegistrationItem extends Model
 {
-    protected $fillable = ['order_id','employed_id', 'course_id', 'price'];
+    protected $fillable = ['order_id','employed_id', 'course_id', 'price','enrollment_id'];
     public function employed()
     {
         return $this->belongsTo(Employed::class);

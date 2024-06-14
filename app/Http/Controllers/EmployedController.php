@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Contracts\Role;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use GuzzleHttp\Client;
 
 class EmployedController extends Controller
 {
@@ -29,7 +31,7 @@ class EmployedController extends Controller
         $userRoles = $user->getRoleNames();
 
         if ($userRoles->contains('Administrator')) {
-            $employeds = Employed::latest()->paginate(5);
+            $employeds = Employed::latest()->paginate(10    );
         } else {
             $employeds = Employed::where('user_id', $user->id)->latest()->paginate(5);
         }
@@ -54,7 +56,6 @@ class EmployedController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:employeds,email',
@@ -65,37 +66,87 @@ class EmployedController extends Controller
             'file_cv' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf|max:2048',
         ]);
 
+        $nameParts = explode(' ', $request->name, 2);
+        $first_name = $nameParts[0];
+        $last_name = isset($nameParts[1]) ? $nameParts[1] : '';
+
         $company_id = Auth::user()->id;
+        $username = Str::before($request->email, '@');
+        $wpData = [
+            'username' => $username,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'email' => $request->email,
+            'password' => 'defaultPassword123',
+        ];
 
-  // Handle file uploads
-  $fileKtp = $request->file('file_ktp') ? $request->file('file_ktp')->store('upload/employed/file_ktp', 'public') : null;
-  $fileFoto = $request->file('file_foto') ? $request->file('file_foto')->store('upload/employed/file_foto', 'public') : null;
-  $fileIjazah = $request->file('file_ijazah') ? $request->file('file_ijazah')->store('upload/employed/file_ijazah', 'public') : null;
-  $fileCv = $request->file('file_cv') ? $request->file('file_cv')->store('upload/employed/file_cv', 'public') : null;
-  $fileSeamanbook = $request->file('file_seamanbook') ? $request->file('file_seamanbook')->store('upload/employed/file_seamanbook', 'public') : null;
+        // Inisialisasi Guzzle Client
+        $client = new Client();
 
+        try {
+            $response = $client->post(env('WORDPRESS_API_URL') . '/wp-json/wp/v2/users', [
+                'auth' => [env('WORDPRESS_API_USER'), env('WORDPRESS_API_PASSWORD')],
+                'json' => $wpData,
+            ]);
 
-  Employed::create([
-    'name' => $request->name,
-    'tempat_lahir' => $request->tempat_lahir,
-    'tgl_lahir' => $request->tgl_lahir,
-    'jk' => $request->jk,
-    'telp' => $request->telp,
-    'email' => $request->email,
-    'status' => 0,
-    'status_woo' => 0,
-    'position' => $request->position,
-    'user_id' => $company_id,
-    'file_ktp' => $fileKtp,
-    'file_foto' => $fileFoto,
-    'file_ijazah' => $fileIjazah,
-    'file_cv' => $fileCv,
-    'file_seamanbook' => $fileSeamanbook,
-]);
+            if ($response->getStatusCode() === 201) {
+                $wpUser = json_decode($response->getBody()->getContents(), true);
+                $wordpressUserId = $wpUser['id'];
+            } else {
+                $responseData = json_decode($response->getBody()->getContents(), true);
+                if ($response->getStatusCode() === 500 && isset($responseData['code']) && $responseData['code'] === 'existing_user_login') {
+                    $searchEndpoint = env('WORDPRESS_API_URL') . '/wp-json/wp/v2/users';
+                    $queryParams = [
+                        'slug' => ($username),
+                        'email' => $request->email,
+                    ];
+                    $searchResponse = $client->get($searchEndpoint, [
+                        'query' => $queryParams,
+                        'auth' => [env('WORDPRESS_API_USER'), env('WORDPRESS_API_PASSWORD')],
+                    ]);
+                    $searchResults = json_decode($searchResponse->getBody()->getContents(), true);
+                    if (!empty($searchResults)) {
+                        $wordpressUserId = $searchResults[0]['id'];
+                        return redirect()->back()->withErrors('Username or email already exists.');
+                    }
+                }
+                return redirect()->back()->withErrors('Failed to create user on WordPress.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('Failed to create user on WordPress: ' . $e->getMessage());
+        }
+
+        // Handle file uploads
+        $fileKtp = $request->file('file_ktp') ? $request->file('file_ktp')->store('upload/employed/file_ktp', 'public') : null;
+        $fileFoto = $request->file('file_foto') ? $request->file('file_foto')->store('upload/employed/file_foto', 'public') : null;
+        $fileIjazah = $request->file('file_ijazah') ? $request->file('file_ijazah')->store('upload/employed/file_ijazah', 'public') : null;
+        $fileCv = $request->file('file_cv') ? $request->file('file_cv')->store('upload/employed/file_cv', 'public') : null;
+        $fileSeamanbook = $request->file('file_seamanbook') ? $request->file('file_seamanbook')->store('upload/employed/file_seamanbook', 'public') : null;
+
+        // Simpan data ke database Laravel
+        Employed::create([
+            'name' => $request->name,
+            'tempat_lahir' => $request->tempat_lahir,
+            'tgl_lahir' => $request->tgl_lahir,
+            'jk' => $request->jk,
+            'telp' => $request->telp,
+            'email' => $request->email,
+            'status' => 0,
+            'status_woo' => 0,
+            'position' => $request->position,
+            'user_id' => $company_id,
+            'file_ktp' => $fileKtp,
+            'file_foto' => $fileFoto,
+            'file_ijazah' => $fileIjazah,
+            'file_cv' => $fileCv,
+            'file_seamanbook' => $fileSeamanbook,
+            'wp_id' => $wordpressUserId,
+        ]);
 
         return redirect()->route('employeds.index')
             ->with('success', 'Employed created successfully.');
     }
+
 
     public function show(Employed $employed): View
     {

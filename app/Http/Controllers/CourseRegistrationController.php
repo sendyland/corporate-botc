@@ -12,9 +12,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+use GuzzleHttp\Client;
 
 class CourseRegistrationController extends Controller
 {
+
+    // function __construct()
+    // {
+    //     $this->middleware('permission:employed-delete', ['only' => ['destroy']]);
+    // }
+
     public function index(): View
     {
         $id = Auth::user()->id;
@@ -52,15 +61,31 @@ class CourseRegistrationController extends Controller
         $id = Auth::user()->id;
         $user = User::find($id);
         $userRoles = $user->getRoleNames();
-            $allcourses = Course::all();
-            if ($userRoles->contains('Administrator')) {
-                $employeds = Employed::latest()->paginate(5);
-            } else {
-                $employeds = Employed::where('user_id', $user->id)->latest()->paginate(5);
-            }
 
-            return view('courseregister.create',compact('allcourses', 'employeds'));
+        // Mengambil ID employed yang sudah terdaftar di CourseRegistrationItem yang statusnya belum dibayar di CourseRegistration
+        $employedIdsWithUnpaidStatus = CourseRegistrationItem::whereHas('courseRegistration', function ($query) {
+            $query->where('status', 0);
+        })->pluck('employed_id');
+
+        // Memfilter employed yang tidak ada di daftar employedIdsWithUnpaidStatus
+        if ($userRoles->contains('Administrator')) {
+            $employeds = Employed::whereNotNull('wp_id')
+                                 ->whereNotIn('id', $employedIdsWithUnpaidStatus)->latest()->paginate(5);
+        } else {
+            $employeds = Employed::whereNotNull('wp_id')
+                                 ->where('user_id', $user->id)
+                                 ->whereNotIn('id', $employedIdsWithUnpaidStatus)
+                                 ->latest()
+                                 ->paginate(5);
         }
+
+        // Mengambil kursus yang memiliki woo_id yang tidak kosong
+        $allcourses = Course::whereNotNull('woo_id')
+                            ->where('woo_id', '!=', '')
+                            ->get();
+
+        return view('courseregister.create', compact('allcourses', 'employeds'));
+    }
 
     public function store(Request $request): RedirectResponse
     {
@@ -113,33 +138,92 @@ class CourseRegistrationController extends Controller
         return view('courseregister.print', compact('order'));
     }
 
+    public function edit($id)
+    {
+        // Find the course registration by the given ID
+        $courseRegistration = CourseRegistration::with(['items', 'user'])->findOrFail($id);
 
-    // public function makeRegisterWoocommerce(Request $request)
-    // {
-    //     $orderData = [
-    //         'payment_method' => 'bacs',
-    //         'payment_method_title' => 'Direct Bank Transfer',
-    //         'set_paid' => true,
-    //         'billing' => [
-    //             'first_name' => $request->first_name,
-    //             'last_name' => $request->last_name,
-    //             'address_1' => $request->address_1,
-    //             'city' => $request->city,
-    //             'state' => $request->state,
-    //             'postcode' => $request->postcode,
-    //             'country' => $request->country,
-    //             'email' => $request->email,
-    //             'phone' => $request->phone,
-    //         ],
-    //         'line_items' => [
-    //             [
-    //                 'product_id' => $request->product_id,
-    //                 'quantity' => 1,
-    //             ],
-    //         ],
-    //     ];
+        // Adjust items data
+        $courseRegistration->items->transform(function ($item, $key) {
+            $item->employed = Employed::find($item->employed_id);
+            return $item;
+        });
 
-    //     $order = $this->wooCommerceService->createOrder($orderData);
-    //     return redirect()->route('employeds.index')->with('success', 'Employeds registered successfully!');
-    // }
+        // Calculate additional details
+        $participantCount = $courseRegistration->items->count();
+        $totalPrice = $courseRegistration->items->sum('price');
+
+        return view('courseregister.edit', compact('courseRegistration', 'participantCount', 'totalPrice'));
+    }
+    public function update(Request $request, $id): RedirectResponse
+    {
+        // Validate the request input
+        $request->validate([
+            'status' => 'nullable|string|max:255',
+        ]);
+
+        // Find the course registration by the given ID
+        $courseRegistration = CourseRegistration::findOrFail($id);
+
+        // Update the course registration with the new values
+        $courseRegistration->update([
+            'user_id_approve' => Auth::user()->id,
+            'approve_at' => Carbon::now(),
+            'status' => $request->status,
+            'status_payment' => $request->status
+        ]);
+        if ($request->status == 1) {
+             // Get all course registration items associated with the order_id
+        $items = CourseRegistrationItem::where('order_id', $id)->get();
+
+        // Array to collect enrollment_ids
+        $enrollmentIds = [];
+
+        // Loop through each item to update enrollment_id
+        foreach ($items as $index => $item) {
+            // Fetch enrollment_id from external API
+            $enrollmentId = $this->fetchEnrollmentIdFromExternalAPI($item);
+            $item->update(['enrollment_id' => $enrollmentId]);
+            $enrollmentIds[] = $enrollmentId;
+        }
+
+        return redirect()->route('course-order.index')
+            ->with('success', 'Course registration updated successfully.');
+        }
+        return redirect()->route('course-order.index')
+        ->with('success', 'Course registration updated successfully.');
+    }
+
+// Function to fetch enrollment_id from an external API
+private function fetchEnrollmentIdFromExternalAPI($item)
+{
+    $client = new Client();
+
+    try {
+        $response = $client->post(env('TUTORLMS_URL') . '/enrollments', [
+            'auth' => [env('TUTORLMS_CONSUMER_KEY'), env('TUTORLMS_CONSUMER_SECRET')],
+            'json' => [
+                'user_id' => $item->employed_id,
+                'course_id' => $item->course_id,
+            ],
+        ]);
+        $data = json_decode($response->getBody(), true);
+        $enrollmentId = $data['data']['enrollment_id'];
+
+        return $enrollmentId;
+    } catch (\Exception $e) {
+        Log::error('Error creating enrollment: ' . $e->getMessage());
+        return null;
+    }
+}
+
+
+    public function destroy(CourseRegistration $courseRegistration): RedirectResponse
+    {
+        $courseRegistration->items()->delete();
+        $courseRegistration->delete();
+        dd($courseRegistration);
+        return redirect()->route('course-order.index')
+                         ->with('success', 'Course registration deleted successfully.');
+    }
 }

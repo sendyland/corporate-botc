@@ -162,21 +162,25 @@
                                 <td>{{ $order->totalPrice }}</td>
                                 <td>
                                     @if ($order->status == 0)
-                                        <span class="badge bg-warning">Register Pending</span>
-                                    @else
-                                        <span class="badge bg-info">Register Approve</span>
+                                        <span class="badge bg-warning">Waiting Approve</span>
+                                    @elseif ($order->status == 1)
+                                        <span class="badge bg-info">Approve</span>
+                                    @elseif ($order->status == 2)
+                                        <span class="badge bg-danger">Ditolak</span>
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($order->status == 3)
+                                    @if ($order->status_payment == 0)
+                                        <span class="badge bg-warning">Waiting Payment</span>
+                                    @elseif ($order->status == 1)
                                         <span class="badge bg-info text-light">Paid</span>
                                     @else
-                                        <span class="badge bg-warning">Not Paid</span>
                                     @endif
                                 </td>
 
                                 <td>
-                                    <form action="#" method="POST">
+                                    <form id="delete-form-{{ $order->id }}"
+                                        action="{{ route('course-order.destroy', $order->id) }}" method="POST">
                                         <a href="#" order="{{ $order->id }}" class="print btn btn-primary btn-sm"
                                             data-bs-toggle="modal" data-bs-target="#ExtralargeModal{{ $order->id }}">
                                             <i class="bi bi-printer"></i>
@@ -207,12 +211,12 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xs-6 col-sm-6 col-md-6 text-right mt-2">
+                                                                                    class="col-xs-6 col-sm-6 col-md-6 tex   t-right mt-2">
                                                                                     <div class="receipt-right">
                                                                                         <h5>{{ $order->company->name }}
                                                                                         </h5>
                                                                                         <p>Telp :
-                                                                                            {{ $order->company->telp }} <i
+                                                                                            {{ $order->company->phone }} <i
                                                                                                 class="fa fa-phone"></i></p>
                                                                                         <p>Email :
                                                                                             {{ $order->company->email }} <i
@@ -294,27 +298,28 @@
                                                                                 <div class="receipt-right">
                                                                                     <p><b>Date :</b>
                                                                                         {{ $order->created_at }}</p>
-
                                                                                     <h5>
-
-                                                                                        Status Register : @if ($order->status == 0)
+                                                                                        Status Register :
+                                                                                        @if ($order->status == 0)
                                                                                             <span
                                                                                                 class="badge bg-warning">Register
                                                                                                 Pending</span>
-                                                                                        @else
-                                                                                            <span
-                                                                                                class="badge bg-info">Register
-                                                                                                Approve</span>
+                                                                                        @elseif($order->status == 1)
+                                                                                            <span class="badge bg-info">
+                                                                                                Register Approve</span>
+                                                                                        @elseif($order->status == 2)
+                                                                                            <span class="badge bg-info">
+                                                                                                Register Ditolak</span>
                                                                                         @endif
                                                                                     </h5>
                                                                                     <h5>
-                                                                                        Status Payment : @if ($order->status == 3)
+                                                                                        Status Payment : @if ($order->status_payment == 0)
                                                                                             <span
-                                                                                                class="badge bg-info text-light">Paid</span>
+                                                                                                class="badge bg-warning">Waiting
+                                                                                                Payment</span>
                                                                                         @else
                                                                                             <span
-                                                                                                class="badge bg-warning">Not
-                                                                                                Paid</span>
+                                                                                                class="badge bg-info text-light">Paid</span>
                                                                                         @endif
                                                                                     </h5>
                                                                                 </div>
@@ -336,14 +341,16 @@
                                             </div>
                                         </div>
                                         @canany(['checkout-edit', 'checkout-delete'])
-                                            @can('employed-edit')
-                                                <a class="btn btn-warning btn-sm" href="#"><i class="bi bi-pencil"></i></a>
+                                            @can('checkout-edit')
+                                                <a class="btn btn-warning btn-sm"
+                                                    href="{{ route('course-order.edit', $order->id) }}"><i
+                                                        class="bi bi-pencil-square"></i></a>
                                             @endcan
                                             @csrf
                                             @method('DELETE')
-                                            @can('employed-delete')
-                                                <button type="submit" class="btn btn-danger btn-sm"><i
-                                                        class="bi bi-trash"></i></button>
+                                            @can('checkout-delete')
+                                                <button type="button" class="btn btn-danger btn-sm delete-order"
+                                                    data-order-id="{{ $order->id }}"><i class="bi bi-trash"></i></button>
                                             @endcan
                                         @endcanany
                                     </form>
@@ -356,4 +363,31 @@
             </div>
         </div>
     </div>
+@endsection
+@section('myscript')
+    <script>
+        // Add event listener when the document is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.delete-order');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const courseId = this.getAttribute('data-order-id');
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'You won\'t be able to revert this!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        // If the user confirms deletion, submit the form
+                        if (result.isConfirmed) {
+                            document.getElementById('delete-form-' + courseId).submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 @endsection
