@@ -22,8 +22,6 @@
 
         .receipt-main {
             background: #ffffff none repeat scroll 0 0;
-            border-bottom: 12px solid #333333;
-            border-top: 12px solid #012970;
             padding: 40px 30px !important;
             position: relative;
             box-shadow: 0 1px 21px #acacac;

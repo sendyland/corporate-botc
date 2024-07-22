@@ -62,6 +62,7 @@ class CourseController extends Controller
 
             } catch (\Exception $e) {
                 // Handle error
+                dd($e);
                 return redirect()->back()->withErrors('Failed to fetch courses from Tutor LMS: ' . $e->getMessage());
             }
         }

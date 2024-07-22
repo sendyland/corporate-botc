@@ -18,6 +18,7 @@ use GuzzleHttp\Client;
 use App\Mail\CourseRegistrationApproved;
 use App\Mail\ParticipantRegistered;
 use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CourseRegistrationController extends Controller
 {
@@ -138,8 +139,22 @@ class CourseRegistrationController extends Controller
 
     public function print($id)
     {
+         // Tambahkan batasan memory dan waktu eksekusi
+         ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '256M');
         $order = CourseRegistration::findOrFail($id);
-        return view('courseregister.print', compact('order'));
+
+        try {
+            // Generate PDF
+            $pdf = PDF::loadView('courseregister.print', compact('order'))
+                ->setOptions(['isHtml5ParserEnabled' => true, 'isPhpEnabled' => true, 'isRemoteEnabled' => true]);
+
+            // Stream PDF
+            return $pdf->stream('Certificate-web.pdf');
+        } catch (\Exception $e) {
+            // Tangkap dan tampilkan error untuk debugging
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function edit($id)
@@ -192,7 +207,7 @@ class CourseRegistrationController extends Controller
 
             // Mengirim email ke setiap peserta
             foreach ($courseRegistration->items as $item) {
-                Mail::to($item->employed->email)->send(new ParticipantRegistered($item->employed, $item->course));
+                Mail::to($item->employed->email)->send(new ParticipantRegistered($item->employed, $item->course, $courseRegistration));
             }
         }
         // Array to collect enrollment_ids

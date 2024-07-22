@@ -5,146 +5,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Print Course Order</title>
-    <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
-    <style>
-        /* Tambahkan CSS yang khusus untuk tampilan cetak */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        .print-content {
-            max-width: 800px;
-            margin: auto;
-        }
-
-        @media print {
-
-            /* Tambahkan CSS untuk mengatur tampilan saat dicetak */
-            .no-print {
-                display: none;
-            }
-        }
-    </style>
-    <style>
-        form {
-            align-self: center;
-            margin-bottom: 15px;
-        }
-
-        h5.card-title.product {
-            font-size: 16px;
-        }
-
-        <style>body {
-            background: #eee;
-            margin-top: 20px;
-        }
-
-        .text-danger strong {
-            color: #9f181c;
-        }
-
-        .receipt-main {
-            background: #ffffff none repeat scroll 0 0;
-            border-bottom: 12px solid #333333;
-            border-top: 12px solid #012970;
-            padding: 40px 30px !important;
-            position: relative;
-            box-shadow: 0 1px 21px #acacac;
-            color: #333333;
-            font-family: open sans;
-        }
-
-        .receipt-main p {
-            color: #333333;
-            font-family: open sans;
-            line-height: 1.42857;
-        }
-
-        .receipt-footer h1 {
-            font-size: 15px;
-            font-weight: 400 !important;
-            margin: 0 !important;
-        }
-
-        .receipt-main::after {
-            background: #414143 none repeat scroll 0 0;
-            content: "";
-            height: 5px;
-            left: 0;
-            position: absolute;
-            right: 0;
-            top: -13px;
-        }
-
-        .receipt-right h5 {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0 0 7px 0;
-        }
-
-        .receipt-right p {
-            font-size: 12px;
-            margin: 0px;
-        }
-
-        .receipt-right p i {
-            text-align: center;
-            width: 18px;
-        }
-
-        .receipt-main td {
-            padding: 9px 20px !important;
-        }
-
-        .receipt-main th {
-            padding: 13px 20px !important;
-        }
-
-        .receipt-main td {
-            font-size: 13px;
-            font-weight: initial !important;
-        }
-
-        .receipt-main td p:last-child {
-            margin: 0;
-            padding: 0;
-        }
-
-        .receipt-main td h2 {
-            font-size: 20px;
-            font-weight: 900;
-            margin: 0;
-            text-transform: uppercase;
-        }
-
-        .receipt-header-mid .receipt-left h1 {
-            font-weight: 100;
-            margin: 34px 0 0;
-            text-align: right;
-            text-transform: uppercase;
-        }
-
-        .receipt-header-mid {
-            margin: 24px 0;
-            overflow: hidden;
-        }
-
-        #container {
-            background-color: #dcdcdc;
-        }
-    </style>
 </head>
 
 <body>
-    <div class="no-print">
-        <button class="btn btn-print" onclick="window.print()">
-            <i class="bi bi-printer"></i>
-            Print</button>
+    <div class="row">
+        <div
+            class="receipt-main receipt-main-{{ $order->id }} col-xs-12 col-sm-12 col-md-12 col-xs-offset-1 col-sm-offset-1 col-md-offset-3">
+            <div class="row">
+                <div class="col-6">
+                    <div class="receipt-header">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="receipt-left">
+                                <img class="img-responsive" alt="iamgurdeeposahan"
+                                    src="https://bootdey.com/img/Content/avatar/avatar6.png"
+                                    style="width: 71px; border-radius: 43px;">
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 text-right mt-2">
+                            <div class="receipt-right">
+                                <h5>{{ $order->user->name }}</h5>
+                                <p>Telp: {{ $order->user->phone }} <i class="fa fa-phone"></i></p>
+                                <p>Email: {{ $order->user->email }} <i class="fa fa-envelope-o"></i></p>
+                                <p>Alamat: {{ $order->user->address }} <i class="fa fa-location-arrow"></i></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="receipt-header">
+                        <div class="col-xs-8 col-sm-8 col-md-8 text-left">
+                            <div class="receipt-right">
+                                <h5>PIC: {{ $order->user->namepic }}</h5>
+                                <p><b>INVOICE: {{ $order->order_number }}</b></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table width="100%" class="table table-bordered mt-4">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nama Peserta</th>
+                        <th>Course</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $no = 1; @endphp
+                    @foreach ($order->items as $item)
+                        <tr>
+                            <td>{{ $no++ }}</td>
+                            <td>{{ $item->employed->name }}</td>
+                            <td>{{ $item->course->title }}</td>
+                            <td>{{ formatRupiah($item->price) }}</td>
+                        </tr>
+                    @endforeach
+                    <tr>
+                        <td></td>
+                        <td class="text-right">
+                            <p><strong>Sub Amount: </strong></p>
+                            <p><strong>Fees: </strong></p>
+                        </td>
+                        <td>
+                            <p><strong>{{ formatRupiah($order->items->sum('price')) }}</strong></p>
+                            <p><strong>-</strong></p>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="text-right">
+                            <h2><strong>Total: </strong></h2>
+                        </td>
+                        <td class="text-left text-danger">
+                            <h2><strong>{{ formatRupiah($order->items->sum('price')) }}</strong></h2>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="receipt-header receipt-header-mid receipt-footer">
+                    <div class="col-xs-8 col-sm-8 col-md-8 text-left">
+                        <div class="receipt-right">
+                            <p><b>Date: </b>{{ $order->created_at }}</p>
+                            <h5>Status Register:
+                                @if ($order->status == 0)
+                                    <span class="badge bg-warning">Register Pending</span>
+                                @else
+                                    <span class="badge bg-info">Register Approve</span>
+                                @endif
+                            </h5>
+                            <h5>Status Payment:
+                                @if ($order->status == 3)
+                                    <span class="badge bg-info text-light">Paid</span>
+                                @else
+                                    <span class="badge bg-warning">Not Paid</span>
+                                @endif
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    @yield('content')
 </body>
 
 </html>

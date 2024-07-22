@@ -12,9 +12,9 @@
     <ul>
         <li>Course: {{ $course->title }}</li>
         <li>Price: {{ formatRupiah($course->price) }}</li>
-        <li>Company: {{ $course->courseRegistration->user->name }}</li>
-        <li>PIC: {{ $course->courseRegistration->user->namepic }}</li>
-        <li>Created At: {{ $course->courseRegistration->created_at }}</li>
+        <li>Company: {{ $courseRegistration->user->name }}</li>
+        <li>PIC: {{ $courseRegistration->user->namepic }}</li>
+        {{-- <li>Created At: {{ $course->courseRegistration->created_at }}</li> --}}
     </ul>
     <p>Thank you for your participation.</p>
 </body>

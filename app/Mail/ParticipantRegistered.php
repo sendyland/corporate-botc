@@ -12,16 +12,18 @@ class ParticipantRegistered extends Mailable
 
     public $participant;
     public $course;
+    public $courseRegistration;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($participant, $course)
+    public function __construct($participant, $course, $courseRegistration)
     {
         $this->participant = $participant;
         $this->course = $course;
+        $this->courseRegistration = $courseRegistration;
     }
 
     /**
